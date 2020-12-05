@@ -8,7 +8,7 @@ namespace PenaltyV2.Models
     public class Globalconstants
     {
         public int Id { get; set; }
-        public Nullable<int> Currentmatchday { get; set; }
-        public string Currentyear { get; set; }
+        public string Variable { get; set; }
+        public string Value { get; set; }
     }
 }

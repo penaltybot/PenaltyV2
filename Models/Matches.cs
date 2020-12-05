@@ -23,6 +23,7 @@ namespace PenaltyV2.Models
         public string Result1 { get; set; }
         public Nullable<decimal> Oddshome { get; set; }
         public Nullable<decimal> Oddsaway { get; set; }
-        
+        public Nullable<decimal> Oddsdraw { get; set; }
+
     }
 }

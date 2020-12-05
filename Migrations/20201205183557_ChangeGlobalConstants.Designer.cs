@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PenaltyV2.Data;
 
 namespace PenaltyV2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201205183557_ChangeGlobalConstants")]
+    partial class ChangeGlobalConstants
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -244,8 +246,6 @@ namespace PenaltyV2.Migrations
                     b.Property<int?>("Matchnumber");
 
                     b.Property<decimal?>("Oddsaway");
-
-                    b.Property<decimal?>("Oddsdraw");
 
                     b.Property<decimal?>("Oddshome");
 
