@@ -1,0 +1,42 @@
+﻿@model IEnumerable<PenaltyV2.Models.Userscores>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-condensed table-striped table-hover sortable">
+        @if (Model.Count() == 0)
+        {
+            <tr>
+                <td colspan="10">Sem registos.</td>
+            </tr>
+        }
+        else
+        {
+            <thead>
+                <tr class="danger">
+                    <th>Posição</th>
+                    <th data-defaultsign="AZ">Nome</th>
+                    <th data-defaultsign="AZ">Equipa</th>
+                    <th data-firstsort="desc">Pontos</th>
+                    <th>Perfeitos</th>
+                </tr>
+            </thead>
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Position</td>
+                    <td>@item.Name</td>
+                    <td>@item.Favoriteteam</td>
+                    <td>@item.Score</td>
+                    <td>@item.Perfects</td>
+                </tr>
+            }
+        }
+    </table>
+</div>
