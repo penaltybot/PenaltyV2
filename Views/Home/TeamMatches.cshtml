@@ -1,0 +1,87 @@
+﻿@model IEnumerable<PenaltyV2.Models.Matches>
+@{
+    ViewBag.Title = "Resultados dos jogos da Primeira liga";
+}
+<h2>@ViewBag.Title</h2>
+
+<h3>Jornada: @Html.DropDownList("ddjornada", new SelectList(ViewBag.MatchesDay), "---", new { @onchange = "callChangefunc(this.value)" })</h3>
+
+
+@if (Model.Count() == 0)
+{
+    <tr>
+        <td colspan="10">No Record's found.</td>
+    </tr>
+}
+else
+{
+
+    string nulo = "X";
+    int i = 0;
+
+
+
+    <h4>@ViewBag.Message</h4>
+    <table class="table table-sm table-hover">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th></th>
+                <th align="center" scope="col">Casa</th>
+                <th></th>
+                <th width="20" height="20" scope="col"></th>
+                <th scope="col">Resultado</th>
+                <th width="20" height="20" scope="col"></th>
+                <th></th>
+                <th align="center" scope="col">Fora</th>
+                <th>Data do Jogo</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                string urlimagehome = item.Idhometeam + ".png";
+                string urlimageaway = item.Idawayteam + ".png";
+
+                <tr>
+                    <th scope="row">@(i+1)</th>
+                    <td></td>
+                    <td><img width="30" height="30" src="~/Images/@urlimagehome" /> @item.Hometeam</td>
+                    <td></td>
+                    <td valign="middle" width="20" height="20">
+                        @if (item.Hometeamgoals != null)
+                        {
+                            @item.Hometeamgoals
+                        }
+                        else
+                        {
+                            @nulo
+                        }
+                    </td>
+                    <td align="center" width="20" height="20">-</td>
+                    <td valign="middle" width="20" height="20">
+                        @if (item.Awayteamgoals != null)
+                        {
+                            @item.Awayteamgoals
+                        }
+                        else
+                        {
+                            @nulo
+                        }
+                    </td>
+                    <td></td>
+                    <td><img width="30" height="30" src="~/Images/@urlimageaway" /> @item.Awayteam</td>
+                    <td>@(((DateTime)item.UtcDate).ToString("g"))</td>
+                </tr>
+                i++;
+            }
+        </tbody>
+    </table>
+
+}
+
+<script>
+    function callChangefunc(val) {
+        window.location.href = "/Home/TeamMatches?matchday=" + val;
+    }
+</script>

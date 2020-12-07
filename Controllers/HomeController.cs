@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PenaltyV2.Data;
@@ -22,14 +23,44 @@ namespace PenaltyV2.Controllers
         }
         public IActionResult Index()
         {
-            List<Userscores> userscores = GetUserscores();
-
-            return View(userscores);
+            return View();
         }
 
         public IActionResult Privacy()
         {
             return View();
+        }
+
+        [Authorize]
+        public IActionResult UserScores()
+        {
+            List<Userscores> userscores = GetUserscores();
+
+            return View(userscores);
+        }
+
+        [Authorize]
+        public ActionResult TeamMatches(int? matchday)
+        {
+
+            if (matchday == null)
+            {
+                //TODO:GetCurrentMatchDay
+                matchday = 1;
+            }
+            ViewBag.Message = "Jornada: " + matchday.ToString();
+
+            List<Matches> qry = GetMatches();
+
+
+            ViewBag.MatchesDay = (from s in qry orderby s.Matchday select s.Matchday).Distinct();
+
+            var filteredResult = from s in qry
+                                 where s.Matchday == matchday
+                                 select s;
+
+
+            return View(filteredResult);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -41,18 +72,40 @@ namespace PenaltyV2.Controllers
         public List<Userscores> GetUserscores()
         {
             List<Userscores> qry = new List<Userscores>();
-            qry = (from s in _dbContext.Userscores
+            qry = (from us in _dbContext.Userscores
                    select new Userscores
                    {
-                       Id = s.Id,
-                       Username = s.Username,
-                       Name = s.Name,
-                       Favoriteteam = s.Favoriteteam,
-                       Perfects = s.Perfects,
-                       Position = s.Position,
-                       Competitionyear = s.Competitionyear,
-                       Score = s.Score,
+                       Id = us.Id,
+                       Username = us.Username,
+                       Name = us.Name,
+                       Favoriteteam = us.Favoriteteam,
+                       Perfects = us.Perfects,
+                       Position = us.Position,
+                       Competitionyear = us.Competitionyear,
+                       Score = us.Score,
                    }).ToList();
+            return qry;
+        }
+
+        public List<Matches> GetMatches()
+        {
+            List<Matches> qry = new List<Matches>();
+
+                qry = (from m in _dbContext.Matches
+                       select new Matches
+                       {
+                           Awayteam = m.Awayteam,
+                           Awayteamgoals = m.Awayteamgoals,
+                           Hometeam = m.Hometeam,
+                           Hometeamgoals = m.Hometeamgoals,
+                           Id = m.Id,
+                           Matchday = m.Matchday,
+                           Matchnumber = m.Matchnumber,
+                           Idawayteam = m.Idawayteam,
+                           Idhometeam = m.Idhometeam,
+                           UtcDate = m.UtcDate,
+                       }).ToList();
+            
             return qry;
         }
     }

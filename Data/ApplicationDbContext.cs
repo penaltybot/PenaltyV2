@@ -18,7 +18,7 @@ namespace PenaltyV2.Data
         public DbSet<Bets> Bets { get; set; }
         public DbSet<Globalconstants> Globalconstants { get; set; }
         public DbSet<Usersinfo> Usersinfo { get; set; }
-
+        public DbSet<Teams> Teams { get; set; }
     }
 
 }

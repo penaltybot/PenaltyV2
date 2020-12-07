@@ -31,16 +31,24 @@ namespace PenaltyV2
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
+                options.CheckConsentNeeded = context => false;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseMySql(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>()
+            services.AddDefaultIdentity<IdentityUser>( Configuration => {
+                Configuration.SignIn.RequireConfirmedEmail = false;
+                Configuration.Password.RequireDigit = false;
+                Configuration.Password.RequiredLength = 6;
+                Configuration.Password.RequireLowercase = false;
+                Configuration.Password.RequireNonAlphanumeric = false;
+                Configuration.Password.RequireUppercase = false;
+            })
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
