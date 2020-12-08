@@ -13,6 +13,7 @@
         }
         else
         {
+            int i = 0;
             <thead>
                 <tr class="danger">
                     <th>Posição</th>
@@ -24,8 +25,9 @@
             </thead>
             foreach (var item in Model)
             {
+                i++;
                 <tr>
-                    <td>@item.Position</td>
+                    <td>@i</td>
                     <td>@item.Name</td>
                     <td>@item.Favoriteteam</td>
                     <td>@item.Score</td>
