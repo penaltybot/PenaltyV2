@@ -1,0 +1,169 @@
+﻿@model IEnumerable<PenaltyV2.Models.MatchesBets>
+
+@{
+    ViewBag.Title = "Apostas dos Jogos";
+}
+<h2>@ViewBag.Title</h2>
+
+<h3>Jornada: @Html.DropDownList("ddjornada", new SelectList(ViewBag.MatchesDay), "---", new { @onchange = "callChangefunc(this.value)" })</h3>
+
+@if (ViewBag.Sucesso != null)
+{
+    <div class="alert alert-success" role="alert">
+        @ViewBag.Sucesso
+    </div>
+}
+else if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.Error
+    </div>
+}
+
+@*<p>Use this area to provide additional information.</p>*@
+
+
+
+@if (Model.Count() == 0)
+{
+    <tr>
+        <td colspan="10">Sem Resultados.</td>
+    </tr>
+}
+else
+{
+
+    int i = 0;
+    string nulo = "---";
+
+
+    <h4>@ViewBag.Message</h4>
+    <form method="post" action="/Home/UserBets">
+
+
+        <table class="table table-sm table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th></th>
+                    <th align="center" scope="col">Casa</th>
+                    <th></th>
+                    @*<th width="20" height="20" scope="col"></th>*@
+                    <th align="center" scope="col">Resultado</th>
+                    @*<th width="20" height="20" scope="col"></th>*@
+                    <th></th>
+                    <th align="center" scope="col">Fora</th>
+                    <th></th>
+                    <th scope="col">Data do Jogo</th>
+                    <th scope="col">Pontos</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var item in Model)
+                {
+                    string urlimagehome = item.Idhometeam + ".png";
+                    string urlimageaway = item.Idawayteam + ".png";
+                    string idtxthome = "txtHome" + item.IdMatch;
+                    string idtxtaway = "txtaway" + item.IdMatch;
+                    string home = "Home";
+                    string draw = "Draw";
+                    string away = "Away";
+
+
+                    <tr>
+                        <th scope="row">@(i+1)</th>
+                        <td><input name="matchday[@i]" type="hidden" value="@item.Matchday"></td>
+                        <td><img width="30" height="30" src="~/Images/@urlimagehome" /> @item.Hometeam</td>
+                        <td></td>
+                        <td>
+                            <div class="toggle-radio">
+                                <input width="60" type="radio" name="rbResult[@i]" id="rbWin[@i]" value="W">
+                                <label for="rbWin[@i]" style="width:60px">
+                                    @if(item.Oddshome != null)
+                                    {
+                                        @item.Oddshome
+                                    }else
+                                    {
+                                        @home
+                                    }
+                                </label>
+                                <input type="radio" name="rbResult[@i]" id="rbDraw[@i]" value="D">
+                                <label for="rbDraw[@i]" style="width:60px">
+                                    @if (item.Oddsdraw != null)
+                                    {
+                                        @item.Oddsdraw
+                                    }
+                                    else
+                                    {
+                                        @draw
+                                    }
+                                </label>
+                                <input width="60" type="radio" name="rbResult[@i]" id="rbLose[@i]" value="L">
+                                <label for="rbLose[@i]" style="width:60px">
+                                    @if (item.Oddsaway != null)
+                                    {
+                                        @item.Oddsaway
+                                    }
+                                    else
+                                    {
+                                        @away
+                                    }
+                                </label>
+                            </div>
+                        </td>
+                        <td></td>
+                        <td><img width="30" height="30" src="~/Images/@urlimageaway" /> @item.Awayteam</td>
+                        <td><input name="idResult[@i]" type="hidden" value="@item.IdMatch"></td>
+                        <td>@item.UtcDate.ToString("g")</td>
+                        <td>
+                            @if (item.Score != null)
+                            {
+                                @item.Score
+                            }
+                            else
+                            {
+                                @nulo
+                            }
+                        @if (item.Perfect == 1)
+                        {
+                            <img width="25" height="25" src="~/Images/bullseye.png" />
+                        }
+                    </td>
+                </tr>
+
+
+                i++;
+            }
+            </tbody>
+        </table>
+        <div style="text-align:left" class="form-group">
+            @if (!(ViewBag.JornadaFechada))
+            {
+                <input type="submit" value="Introduzir Apostas" class="btn btn-primary" />
+            }
+            else
+            {
+                <div class="alert alert-warning" role="alert">
+                    Esquece mãos-de-manteiga! Esta jornada já era.
+                </div>
+            }
+        </div>
+    </form>
+    @*<div class="form-group">
+            @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+
+                @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+            </div>
+        </div>*@
+
+
+
+}
+
+<script>
+    function callChangefunc(val) {
+        window.location.href = "/Home/UserBets?matchday=" + val;
+    }
+</script>

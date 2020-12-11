@@ -63,6 +63,39 @@ namespace PenaltyV2.Controllers
             return View(filteredResult);
         }
 
+        [Authorize]
+        public ActionResult UserBets(int? matchday)
+        {
+
+
+            if (matchday == null)
+            {
+                matchday = Database.GetCurrentMatchDay(_dbContext);
+            }
+            ViewBag.Message = "Jornada: " + matchday.ToString();
+
+            List<Matches> qry = Database.GetMatches(_dbContext);
+            ViewBag.MatchesDay = (from s in qry orderby s.Matchday select s.Matchday).Distinct();
+
+            List<MatchesBets> list2 = Database.GetBetsByUserAndMatchday(matchday, User.Identity.Name, _dbContext);
+            if (list2.Count > 0)
+            {
+                DateTime UtcDate = (DateTime)list2.First().UtcDate;
+                //TODO: Colocar as horas no webconfig
+                if (DateTime.Today.AddHours(6.00) > UtcDate)
+                {
+                    ViewBag.JornadaFechada = true;
+                }
+                else
+                {
+                    ViewBag.JornadaFechada = false;
+                }
+            }
+
+            return View(list2);
+
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

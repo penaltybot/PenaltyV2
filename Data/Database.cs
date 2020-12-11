@@ -71,6 +71,52 @@ namespace PenaltyV2.Data
             return (int)match.Matchday;
         }
 
+        public static List<MatchesBets> GetBetsByUserAndMatchday(int? matchday, string username, ApplicationDbContext dbContext)
+        {
+
+            List<MatchesBets> qry = new List<MatchesBets>();
+            
+                qry = (from m2 in
+                           (from m in dbContext.Matches
+                            where m.Matchday == matchday
+                            select m)
+                       join b2 in
+                           (from b in dbContext.Bets
+                            where b.Username == username
+                            select b)
+                       on m2.Id equals b2.Idmatch into bGroup
+                       from b2 in bGroup.DefaultIfEmpty()
+                       select new MatchesBets
+                       {
+                           Awayteam = m2.Awayteam,
+                           Awayteamgoals = m2.Awayteamgoals,
+                           Hometeam = m2.Hometeam,
+                           Hometeamgoals = m2.Hometeamgoals,
+                           IdMatch = m2.Id,
+                           Matchday = m2.Matchday,
+                           Matchnumber = m2.Matchnumber,
+                           Idawayteam = m2.Idawayteam,
+                           Idhometeam = m2.Idhometeam,
+                           Status = m2.Status,
+                           Oddsaway = m2.Oddsaway,
+                           Oddsdraw = m2.Oddsdraw,
+                           Oddshome = m2.Oddshome,
+                           UtcDate = (DateTime)m2.UtcDate,
+                           Username = b2.Username,
+                           GoalsAwayTeam = b2.GoalsAwayTeam,
+                           GoalsHomeTeam = b2.GoalsHomeTeam,
+                           Score = b2.Score,
+                           Perfect = b2.Perfect,
+                           Betsidmatch = b2.Idmatch,
+                           Betsmatchday = b2.Matchday,
+
+                       }).ToList();
+            
+
+            return qry;
+        }
+
+        //INACABADO
         public static int GetCurrentMatchYear(ApplicationDbContext dbContext)
         {
             List<Matches> qry = new List<Matches>();

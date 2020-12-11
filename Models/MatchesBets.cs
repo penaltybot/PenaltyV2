@@ -5,9 +5,10 @@ using System.Threading.Tasks;
 
 namespace PenaltyV2.Models
 {
-    public class Matches
+    public class MatchesBets
     {
-        public int Id { get; set; }
+
+        public int IdMatch{ get; set; }
         public Nullable<int> Matchday { get; set; }
         public Nullable<int> Matchnumber { get; set; }
         public string Hometeam { get; set; }
@@ -17,13 +18,16 @@ namespace PenaltyV2.Models
         public Nullable<int> Idawayteam { get; set; }
         public Nullable<int> Idhometeam { get; set; }
         public string Status { get; set; }
-        public string Competitionyear { get; set; }
-        public Nullable<System.DateTime> UtcDate { get; set; }
-        public Nullable<int> IdmatchAPI { get; set; }
-        public string Result1 { get; set; }
+        public DateTime UtcDate { get; set; }
         public Nullable<decimal> Oddshome { get; set; }
         public Nullable<decimal> Oddsaway { get; set; }
         public Nullable<decimal> Oddsdraw { get; set; }
-        public int LeagueID { get; set; }
+        public Nullable<int> GoalsHomeTeam { get; set; }
+        public Nullable<int> GoalsAwayTeam { get; set; }
+        public string Username { get; set; }
+        public Nullable<int> Betsidmatch { get; set; }
+        public Nullable<int> Betsmatchday { get; set; }
+        public decimal? Score { get; set; }
+        public int? Perfect { get; set; }
     }
 }
