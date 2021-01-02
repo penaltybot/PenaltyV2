@@ -66,8 +66,6 @@ namespace PenaltyV2.Controllers
         [Authorize]
         public ActionResult UserBets(int? matchday)
         {
-
-
             if (matchday == null)
             {
                 matchday = Database.GetCurrentMatchDay(_dbContext);
@@ -83,6 +81,47 @@ namespace PenaltyV2.Controllers
                 DateTime UtcDate = (DateTime)list2.First().UtcDate;
                 //TODO: Colocar as horas no webconfig
                 if (DateTime.Today.AddHours(6.00) > UtcDate)
+                {
+                    ViewBag.JornadaFechada = true;
+                }
+                else
+                {
+                    ViewBag.JornadaFechada = false;
+                }
+            }
+
+            return View(list2);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult UserBets(string[] rbResult, int[] idmatchAPI, int[] matchday)
+        {
+            ViewBag.Message = "Jornada: " + matchday[0].ToString();
+            string username = User.Identity.Name;
+            try
+            {
+                for (int i = 0; i < rbResult.Length; i++)
+                {
+                    Database.InsertBets(username, idmatchAPI[i], matchday[i], rbResult[i]);
+                }
+                ViewBag.Sucesso = "Apostas inseridas com sucesso!";
+            }
+            catch (Exception exp)
+            {
+                ViewBag.Error = exp.Message;
+                throw;
+            }
+
+            List<Matches> qry = Database.GetMatches(_dbContext);
+            ViewBag.MatchesDay = (from s in qry orderby s.Matchday select s.Matchday).Distinct();
+
+            List<MatchesBets> list2 = Database.GetBetsByUserAndMatchday(matchday[0], User.Identity.Name, _dbContext);
+            if (list2.Count > 0)
+            {
+                DateTime UtcDate = (DateTime)list2.First().UtcDate;
+                //TODO: Colocar as horas no webconfig
+                if (DateTime.Today.AddHours(6) > UtcDate)
                 {
                     ViewBag.JornadaFechada = true;
                 }

@@ -19,15 +19,17 @@ namespace PenaltyV2.Models
         public Nullable<int> Idhometeam { get; set; }
         public string Status { get; set; }
         public DateTime UtcDate { get; set; }
+        public int? IdMatchAPI { get; set; }
         public Nullable<decimal> Oddshome { get; set; }
         public Nullable<decimal> Oddsaway { get; set; }
         public Nullable<decimal> Oddsdraw { get; set; }
         public Nullable<int> GoalsHomeTeam { get; set; }
         public Nullable<int> GoalsAwayTeam { get; set; }
         public string Username { get; set; }
-        public Nullable<int> Betsidmatch { get; set; }
+        public Nullable<int> BetsidmatchAPI { get; set; }
         public Nullable<int> Betsmatchday { get; set; }
         public decimal? Score { get; set; }
         public int? Perfect { get; set; }
+        public string BetResult1 { get; set; }
     }
 }

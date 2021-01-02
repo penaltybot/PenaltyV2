@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PenaltyV2.Data;
 
 namespace PenaltyV2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210102170316_SendEmailReminder")]
+    partial class SendEmailReminder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -187,7 +189,7 @@ namespace PenaltyV2.Migrations
 
                     b.Property<int?>("GoalsHomeTeam");
 
-                    b.Property<int>("IdmatchAPI");
+                    b.Property<int>("Idmatch");
 
                     b.Property<int?>("Matchday");
 
@@ -267,11 +269,9 @@ namespace PenaltyV2.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("LogoUri");
+                    b.Property<string>("Teamname");
 
-                    b.Property<string>("Name");
-
-                    b.Property<string>("TeamId");
+                    b.Property<string>("Teamuri");
 
                     b.HasKey("Id");
 

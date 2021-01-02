@@ -12,5 +12,6 @@ namespace PenaltyV2.Models
         public string Name { get; set; }
         public string Leagues { get; set; }
         public string Favoriteteam { get; set; }
+        public bool SendEmailReminder { get; set; }
     }
 }

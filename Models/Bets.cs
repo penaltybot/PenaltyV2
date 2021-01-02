@@ -9,7 +9,7 @@ namespace PenaltyV2.Models
     {
         public string Id { get; set; }
         public string Username { get; set; }
-        public int Idmatch { get; set; }
+        public int IdmatchAPI { get; set; }
         public Nullable<int> GoalsHomeTeam { get; set; }
         public Nullable<int> GoalsAwayTeam { get; set; }
         public string Result { get; set; }
