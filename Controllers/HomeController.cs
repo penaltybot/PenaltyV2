@@ -135,6 +135,36 @@ namespace PenaltyV2.Controllers
 
         }
 
+        [Authorize]
+        public ActionResult Summary(int? matchday)
+        {
+
+            if (matchday == null)
+            {
+                matchday = Database.GetCurrentMatchDay(_dbContext);
+            }
+            ViewBag.Message = "Jornada: " + matchday.ToString();
+
+            List<Matches> qry = Database.GetMatches(_dbContext);
+            ViewBag.MatchesDay = (from s in qry orderby s.Matchday select s.Matchday).Distinct();
+
+            List<ScoresUserBets> list2 = Database.GetScoresUserBets(matchday,_dbContext);
+            if (list2.Count > 0)
+            {
+                List<UsersBets> usersbets = list2.First().Userbets;
+                List<string> usernames = new List<string>();
+                foreach (var item in usersbets)
+                {
+                    usernames.Add(item.Name);
+                }
+                ViewBag.Usernames = usernames;
+            }
+
+
+            return View(list2);
+
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

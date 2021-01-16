@@ -1,0 +1,137 @@
+﻿@model IEnumerable< PenaltyV2.Models.ScoresUserBets >
+
+@{
+    ViewBag.Title = "Sumário de Resultados";
+}
+<h2>@ViewBag.Title</h2>
+
+<h3>Jornada: @Html.DropDownList("ddjornada", new SelectList(ViewBag.MatchesDay), "---", new { @onchange = "callChangefunc(this.value)" })</h3>
+
+
+@if (Model.Count() == 0)
+{
+    <tr>
+        <td colspan="10">Sem Resultados.</td>
+    </tr>
+}
+else
+{
+
+    int i = 0;
+    string nulo = "---";
+
+
+    <h4>@ViewBag.Message</h4>
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th align="center" scope="col">Casa</th>
+                <th>Resultado</th>
+                <th align="center" scope="col">Fora</th>
+                @foreach (var item in ViewBag.Usernames)
+                {
+                    <th style="border-bottom-style:solid">@item</th>
+
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                decimal[] total = new decimal[ViewBag.Usernames.Count];
+            }
+            @foreach (var item in Model)
+            {
+
+                int j = 0;
+
+                string idtxthome = "txtHome" + item.IdMatchAPI;
+                string idtxtaway = "txtaway" + item.IdMatchAPI;
+
+
+                <tr>
+                    <th scope="row">@(i + 1)</th>
+
+                    <td>@item.Hometeam</td>
+                    <td align="center" width="20" height="20">@item.Hometeamgoals - @item.Awayteamgoals</td>
+                    <td>@item.Awayteam</td>
+
+                    @foreach (var item2 in item.Userbets)
+                    {
+
+                        if (item2.Score != null)
+                        {
+                            total[j] += (decimal)item2.Score;
+                            if (item2.Score == (decimal)0)
+                            {
+                                <td style="background-color:palevioletred; border-style:solid">
+                                    @item2.Score [@item2.Result]
+                                </td>
+                            }
+                            else if (item2.Perfect == 1)
+                            {
+                                <td style="background-color: greenyellow; border-style: solid">
+                                    @item2.Score [@item2.Result]
+                                </td>
+                            }
+                            else
+                            {
+                                <td style="background-color: yellow; border-style: solid">
+                                    @item2.Score [@item2.Result]
+                                </td>
+                            }
+
+                        }
+                        else
+                        {
+                            <td style="background-color: red; border-style: solid">
+                                0 [-]
+                            </td>
+                        }
+                        j++;
+                    }
+
+                </tr>
+
+                i++;
+            }
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Total:</td>
+                @for (int jnum = 0; jnum < total.Length; jnum++)
+                {
+
+                    if (total[jnum] == total.Max())
+                    {
+                        <td style="border-left:solid">
+                            @total[jnum] <img width="25" height="25" src="~/Images/prize.png" />
+                        </td>
+                    }
+                    else if (total[jnum] == total.Min())
+                    {
+                        <td style="border-left:solid">
+                            @total[jnum] <img width="25" height="25" src="~/Images/poop.png" />
+                        </td>
+                    }
+                    else
+                    {
+                        <td style="border-left:solid">
+                            @total[jnum]
+                        </td>
+                    }
+
+                }
+
+            </tr>
+        </tbody>
+    </table>
+}
+
+<script>
+    function callChangefunc(val) {
+        window.location.href = "/Home/Summary?matchday=" + val;
+    }
+</script>

@@ -65,6 +65,7 @@ namespace PenaltyV2.Data
             List<Matches> qry = new List<Matches>();
             qry = (from m in dbContext.Matches
                    where m.UtcDate > DateTime.Today
+                   orderby m.UtcDate
                    select new Matches
                    {
                        Matchday = m.Matchday
@@ -115,7 +116,7 @@ namespace PenaltyV2.Data
                            Betsmatchday = b2.Matchday,
                            BetResult1 = b2.Result
 
-                       }).ToList();
+                       }).OrderBy(m2 => m2.UtcDate).ToList();
             
 
             return qry;
@@ -141,6 +142,59 @@ namespace PenaltyV2.Data
             command.ExecuteNonQuery();
 
             connection.Close();
+        }
+
+        internal static List<ScoresUserBets> GetScoresUserBets(int? matchday, ApplicationDbContext dbContext)
+        {
+            List<ScoresUserBets> qry = new List<ScoresUserBets>();
+
+
+
+            qry = (from m in dbContext.Matches
+                   where m.Matchday == matchday
+                   orderby m.UtcDate
+                   select new ScoresUserBets
+                   {
+                       Awayteam = m.Awayteam,
+                       Awayteamgoals = m.Awayteamgoals,
+                       Hometeam = m.Hometeam,
+                       Hometeamgoals = m.Hometeamgoals,
+                       IdMatchAPI = m.IdmatchAPI,
+                       Result1 = m.Result1,
+                   }).ToList();
+
+
+            foreach (var item in qry)
+            {
+                List<UsersBets> betslist = new List<UsersBets>();
+                
+
+                    betslist = (from ud2 in
+                     (from ud in dbContext.Usersinfo
+                      select ud)
+                                join b2 in
+                                 (from b in dbContext.Bets
+                                  where b.IdmatchAPI == item.IdMatchAPI
+                                  select b)
+                               on ud2.Username equals b2.Username into bGroup
+                                from b2 in bGroup.DefaultIfEmpty()
+                                select new UsersBets
+                                {
+                                    Name = ud2.Name,
+                                    IdMatch = b2.IdmatchAPI,
+                                    GoalsHomeTeam = b2.GoalsHomeTeam,
+                                    GoalsAwayTeam = b2.GoalsAwayTeam,
+                                    Username = b2.Username,
+                                    Result = b2.Result,
+                                    Perfect = b2.Perfect,
+                                    Score = b2.Score,
+                                    Matchday = b2.Matchday
+                                }).ToList();
+
+                               item.Userbets = betslist;
+            }
+            return qry;
+
         }
 
         public static string GetConnectionString()

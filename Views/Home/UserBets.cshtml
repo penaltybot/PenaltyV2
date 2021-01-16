@@ -80,11 +80,25 @@ else
                             <div class="toggle-radio">
                                 @if (item.BetResult1 == "H")
                                 {
-                                    <input width="60" type="radio" name="rbResult[@i]" id="rbWin[@i]" value="H" checked>
+                                    if (!(ViewBag.JornadaFechada))
+                                    {
+                                        <input width="60" type="radio" name="rbResult[@i]" id="rbWin[@i]" value="H" checked>
+                                    }
+                                    else
+                                    {
+                                        <input width="60" type="radio" name="rbResult[@i]" id="rbWin[@i]" value="H" checked disabled>
+                                    }
                                 }
                                 else
                                 {
-                                    <input width="60" type="radio" name="rbResult[@i]" id="rbWin[@i]" value="H">
+                                    if (!(ViewBag.JornadaFechada))
+                                    {
+                                        <input width="60" type="radio" name="rbResult[@i]" id="rbWin[@i]" value="H">
+                                    }
+                                    else
+                                    {
+                                        <input width="60" type="radio" name="rbResult[@i]" id="rbWin[@i]" value="H" disabled>
+                                    }
                                 }
                                 <label for="rbWin[@i]" style="width:60px">
                                     @if (item.Oddshome != null)
@@ -98,11 +112,25 @@ else
                                 </label>
                                 @if (item.BetResult1 == "D")
                                 {
-                                    <input type="radio" name="rbResult[@i]" id="rbDraw[@i]" value="D" checked>
+                                    if (!(ViewBag.JornadaFechada))
+                                    {
+                                        <input type="radio" name="rbResult[@i]" id="rbDraw[@i]" value="D" checked>
+                                    }
+                                    else
+                                    {
+                                        <input type="radio" name="rbResult[@i]" id="rbDraw[@i]" value="D" checked disabled>
+                                    }
                                 }
                                 else
                                 {
-                                    <input type="radio" name="rbResult[@i]" id="rbDraw[@i]" value="D">
+                                    if (!(ViewBag.JornadaFechada))
+                                    {
+                                        <input type="radio" name="rbResult[@i]" id="rbDraw[@i]" value="D">
+                                    }
+                                    else
+                                    {
+                                        <input type="radio" name="rbResult[@i]" id="rbDraw[@i]" value="D" disabled>
+                                    }
                                 }
                                 <label for="rbDraw[@i]" style="width:60px">
                                     @if (item.Oddsdraw != null)
@@ -116,11 +144,25 @@ else
                                 </label>
                                 @if (item.BetResult1 == "A")
                                 {
-                                    <input width="60" type="radio" name="rbResult[@i]" id="rbLose[@i]" value="A" checked>
+                                    if (!(ViewBag.JornadaFechada))
+                                    {
+                                        <input width="60" type="radio" name="rbResult[@i]" id="rbLose[@i]" value="A" checked>
+                                    }
+                                    else
+                                    {
+                                        <input width="60" type="radio" name="rbResult[@i]" id="rbLose[@i]" value="A" checked disabled>
+                                    }
                                 }
                                 else
                                 {
-                                    <input width="60" type="radio" name="rbResult[@i]" id="rbLose[@i]" value="A">
+                                    if (!(ViewBag.JornadaFechada))
+                                    {
+                                        <input width="60" type="radio" name="rbResult[@i]" id="rbLose[@i]" value="A">
+                                    }
+                                    else
+                                    {
+                                        <input width="60" type="radio" name="rbResult[@i]" id="rbLose[@i]" value="A" disabled>
+                                    }
                                 }
                                 <label for="rbLose[@i]" style="width:60px">
                                     @if (item.Oddsaway != null)
