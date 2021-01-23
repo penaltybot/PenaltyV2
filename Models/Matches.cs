@@ -24,6 +24,7 @@ namespace PenaltyV2.Models
         public Nullable<decimal> Oddshome { get; set; }
         public Nullable<decimal> Oddsaway { get; set; }
         public Nullable<decimal> Oddsdraw { get; set; }
+        public Nullable<decimal> Multiplier { get; set; }
         public int LeagueID { get; set; }
     }
 }

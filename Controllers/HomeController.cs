@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using PenaltyV2.Data;
 using PenaltyV2.Models;
@@ -31,12 +32,26 @@ namespace PenaltyV2.Controllers
             return View();
         }
 
-        [Authorize]
-        public IActionResult UserScores()
+        public IActionResult Help()
         {
+            return View();
+        }
 
-            List<Userscores> userscores = Database.GetUserscores(_dbContext);
+        [Authorize]
+        public IActionResult UserScores(string league)
+        {
+            
+            List<Leagues> qry = Database.GetLeagues(_dbContext);
+            IEnumerable<string> ligas = ((IEnumerable<string>)(from s in qry orderby s.Id select s.LeagueName));
+            ViewBag.Ligas = ligas;
 
+            if(string.IsNullOrEmpty(league))
+            {
+                league = ligas.First();
+            }
+
+            List<Userscores> userscores = Database.GetUserscores(_dbContext, league);
+            ViewBag.LigaSelecionada = league;
             return View(userscores);
         }
 

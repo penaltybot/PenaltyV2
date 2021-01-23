@@ -14,7 +14,7 @@ namespace PenaltyV2.Data
     public class Database
     {
 
-        public static List<Userscores> GetUserscores(ApplicationDbContext dbContext)
+        public static List<Userscores> GetUserscores(ApplicationDbContext dbContext, string league)
         {
            //TODO: Tenho de ir buscar o competition year
             List<Userscores> qry = new List<Userscores>();
@@ -22,6 +22,7 @@ namespace PenaltyV2.Data
                    where us.Competitionyear == "2020"
                    join ui in dbContext.Usersinfo
                    on us.Username equals ui.Username
+                   where ui.Leagues.Contains(league)
                    orderby us.Score descending
                    select new Userscores
                    {
@@ -36,6 +37,23 @@ namespace PenaltyV2.Data
                    }).ToList();
             
             return qry;
+        }
+
+        internal static List<Leagues> GetLeagues(ApplicationDbContext dbContext)
+        {
+            //Melhorar isto para ir antes à tabela dos users
+            List<Leagues> qry = new List<Leagues>();
+
+            qry = (from l in dbContext.Leagues
+                   select new Leagues
+                   {
+                       Id = l.Id,
+                       LeagueIDAPI = l.LeagueIDAPI,
+                       LeagueName = l.LeagueName
+                   }).ToList();
+
+            return qry;
+
         }
 
         public static List<Matches> GetMatches(ApplicationDbContext dbContext)

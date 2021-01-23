@@ -3,37 +3,53 @@
     ViewData["Title"] = "Pontuação";
 }
 
-<div class="table-responsive">
-    <table class="table table-bordered table-condensed table-striped table-hover sortable">
-        @if (Model.Count() == 0)
-        {
-            <tr>
-                <td colspan="10">Sem registos.</td>
-            </tr>
-        }
-        else
-        {
-            int i = 0;
-            <thead>
-                <tr class="danger">
-                    <th>Posição</th>
-                    <th data-defaultsign="AZ">Nome</th>
-                    <th data-defaultsign="AZ">Equipa</th>
-                    <th data-firstsort="desc">Pontos</th>
-                    <th>Perfeitos</th>
-                </tr>
-            </thead>
-            foreach (var item in Model)
+<div class="row">
+    <div class="col-md-10">
+        <h2>Liga: @ViewBag.LigaSelecionada  </h2> 
+    </div>
+    <div class="col-md-2" style="padding-top:5px">
+        @Html.DropDownList("ddliga", new SelectList(ViewBag.Ligas), "Selecione Liga", new { @onchange = "callChangefunc(this.value)" })
+    </div>
+</div>
+
+
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-condensed table-striped table-hover sortable">
+            @if (Model.Count() == 0)
             {
-                i++;
                 <tr>
-                    <td>@i</td>
-                    <td>@item.Name</td>
-                    <td>@item.Favoriteteam</td>
-                    <td>@item.Score</td>
-                    <td>@item.Perfects</td>
+                    <td colspan="10">Sem registos.</td>
                 </tr>
             }
+            else
+            {
+                int i = 0;
+                <thead>
+                    <tr class="danger">
+                        <th>Posição</th>
+                        <th data-defaultsign="AZ">Nome</th>
+                        <th data-defaultsign="AZ">Equipa</th>
+                        <th data-firstsort="desc">Pontos</th>
+                        <th>Perfeitos</th>
+                    </tr>
+                </thead>
+                foreach (var item in Model)
+                {
+                    i++;
+                    <tr>
+                        <td>@i</td>
+                        <td>@item.Name</td>
+                        <td>@item.Favoriteteam</td>
+                        <td>@item.Score</td>
+                        <td>@item.Perfects</td>
+                    </tr>
+                }
+            }
+        </table>
+    </div>
+    <script>
+        function callChangefunc(val) {
+            window.location.href = "/Home/UserScores?league=" + val;
         }
-    </table>
-</div>
+    </script>

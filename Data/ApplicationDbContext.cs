@@ -19,6 +19,8 @@ namespace PenaltyV2.Data
         public DbSet<Globalconstants> Globalconstants { get; set; }
         public DbSet<Usersinfo> Usersinfo { get; set; }
         public DbSet<Teams> Teams { get; set; }
+        public DbSet<Leagues> Leagues { get; set; }
+        public DbSet<LegacyScores> LegacyScores { get; set; }
     }
 
 }
