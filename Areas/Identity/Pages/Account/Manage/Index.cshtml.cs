@@ -26,7 +26,7 @@ namespace PenaltyV2.Areas.Identity.Pages.Account.Manage
             _signInManager = signInManager;
             _emailSender = emailSender;
         }
-
+        [Display(Name = "Utilizador")]
         public string Username { get; set; }
 
         public bool IsEmailConfirmed { get; set; }
@@ -41,6 +41,7 @@ namespace PenaltyV2.Areas.Identity.Pages.Account.Manage
         {
             [Required]
             [EmailAddress]
+            [Display(Name = "E-Mail")]
             public string Email { get; set; }
 
             [Phone]
@@ -109,7 +110,7 @@ namespace PenaltyV2.Areas.Identity.Pages.Account.Manage
             }
 
             await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Your profile has been updated";
+            StatusMessage = "O teu perfil foi atualizado!";
             return RedirectToPage();
         }
 

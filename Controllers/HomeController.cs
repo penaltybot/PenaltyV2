@@ -37,6 +37,15 @@ namespace PenaltyV2.Controllers
             return View();
         }
 
+        public void matchdayViewbags(int matchday)
+        {
+            ViewBag.Message = "Jornada: " + matchday.ToString();
+            ViewBag.JornadaAnt = matchday - 1;
+            ViewBag.JornadaSeg = matchday + 1;
+        }
+
+
+
         [Authorize]
         public IActionResult UserScores(string league)
         {
@@ -63,7 +72,7 @@ namespace PenaltyV2.Controllers
             {
                 matchday = Database.GetCurrentMatchDay(_dbContext);
             }
-            ViewBag.Message = "Jornada: " + matchday.ToString();
+            matchdayViewbags((int)matchday);
 
             List<Matches> qry = Database.GetMatches(_dbContext);
 
@@ -85,7 +94,7 @@ namespace PenaltyV2.Controllers
             {
                 matchday = Database.GetCurrentMatchDay(_dbContext);
             }
-            ViewBag.Message = "Jornada: " + matchday.ToString();
+            matchdayViewbags((int)matchday);
 
             List<Matches> qry = Database.GetMatches(_dbContext);
             ViewBag.MatchesDay = (from s in qry orderby s.Matchday select s.Matchday).Distinct();
@@ -112,7 +121,8 @@ namespace PenaltyV2.Controllers
         [HttpPost]
         public ActionResult UserBets(string[] rbResult, int[] idmatchAPI, int[] matchday)
         {
-            ViewBag.Message = "Jornada: " + matchday[0].ToString();
+            
+            matchdayViewbags((int)matchday[0]);
             string username = User.Identity.Name;
             try
             {
@@ -158,7 +168,7 @@ namespace PenaltyV2.Controllers
             {
                 matchday = Database.GetCurrentMatchDay(_dbContext);
             }
-            ViewBag.Message = "Jornada: " + matchday.ToString();
+            matchdayViewbags((int)matchday);
 
             List<Matches> qry = Database.GetMatches(_dbContext);
             ViewBag.MatchesDay = (from s in qry orderby s.Matchday select s.Matchday).Distinct();

@@ -1,11 +1,16 @@
-﻿@model IEnumerable< PenaltyV2.Models.ScoresUserBets >
+﻿@model IEnumerable<PenaltyV2.Models.ScoresUserBets>
 
 @{
     ViewBag.Title = "Sumário de Resultados";
 }
-<h2>@ViewBag.Title</h2>
-
-<h3>Jornada: @Html.DropDownList("ddjornada", new SelectList(ViewBag.MatchesDay), "---", new { @onchange = "callChangefunc(this.value)" })</h3>
+<div class="d-flex">
+    <div class="p-2 mr-auto">
+        <h3>@ViewBag.Title</h3>
+    </div>
+    <div class="p-2">
+        <h3>Jornada: @Html.DropDownList("ddjornada", new SelectList(ViewBag.MatchesDay), "---", new { @onchange = "callChangefunc(this.value)" })</h3>
+    </div>
+</div>
 
 
 @if (Model.Count() == 0)
@@ -20,8 +25,14 @@ else
     int i = 0;
     string nulo = "---";
 
+<div class="d-flex justify-content-center">
+    <h3>
+        <a href="/Home/Summary?matchday=@ViewBag.JornadaAnt"><i class="fa fa-arrow-left"></i></a>&nbsp;
+        <b>@ViewBag.Message</b>
+        &nbsp;<a href="/Home/Summary?matchday=@ViewBag.JornadaSeg"><i class="fa fa-arrow-right"></i></a>
+    </h3>
+</div>
 
-    <h4>@ViewBag.Message</h4>
 
     <table class="table table-hover">
         <thead>
