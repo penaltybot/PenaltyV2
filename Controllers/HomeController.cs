@@ -32,6 +32,18 @@ namespace PenaltyV2.Controllers
             return View();
         }
 
+        public IActionResult SubmitEmailBet(string token)
+        {
+            EmailBet emailBet = Database.GetEmailBetByToken(token);
+
+            if (emailBet != null)
+            {
+                Database.InsertBets(emailBet.Username, Convert.ToInt32(emailBet.IdmatchAPI), 0, emailBet.Result);
+            }
+
+            return View();
+        }
+
         public IActionResult Help()
         {
             return View();
@@ -49,12 +61,12 @@ namespace PenaltyV2.Controllers
         [Authorize]
         public IActionResult UserScores(string league)
         {
-            
+
             List<Leagues> qry = Database.GetLeagues(_dbContext);
             IEnumerable<string> ligas = ((IEnumerable<string>)(from s in qry orderby s.Id select s.LeagueName));
             ViewBag.Ligas = ligas;
 
-            if(string.IsNullOrEmpty(league))
+            if (string.IsNullOrEmpty(league))
             {
                 league = ligas.First();
             }
@@ -121,7 +133,7 @@ namespace PenaltyV2.Controllers
         [HttpPost]
         public ActionResult UserBets(string[] rbResult, int[] idmatchAPI, int[] matchday)
         {
-            
+
             matchdayViewbags((int)matchday[0]);
             string username = User.Identity.Name;
             try
@@ -173,7 +185,7 @@ namespace PenaltyV2.Controllers
             List<Matches> qry = Database.GetMatches(_dbContext);
             ViewBag.MatchesDay = (from s in qry orderby s.Matchday select s.Matchday).Distinct();
 
-            List<ScoresUserBets> list2 = Database.GetScoresUserBets(matchday,_dbContext);
+            List<ScoresUserBets> list2 = Database.GetScoresUserBets(matchday, _dbContext);
             if (list2.Count > 0)
             {
                 List<UsersBets> usersbets = list2.First().Userbets;
