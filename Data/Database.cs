@@ -60,11 +60,26 @@ namespace PenaltyV2.Data
 
         }
 
+        public static List<Teams> GetTeams(ApplicationDbContext dbContext)
+        {
+            List<Teams> qry = new List<Teams>();
+
+            qry = (from t in dbContext.Teams
+                   select new Teams
+                   {
+                       TeamId = t.TeamId,
+                       Name = t.Name
+                   }).ToList();
+
+            return qry;
+        }
+
         public static List<Matches> GetMatches(ApplicationDbContext dbContext)
         {
             List<Matches> qry = new List<Matches>();
 
             qry = (from m in dbContext.Matches
+                   orderby m.UtcDate
                    select new Matches
                    {
                        Awayteam = m.Awayteam,
@@ -144,26 +159,28 @@ namespace PenaltyV2.Data
             return qry;
         }
 
-        public static void InsertBets(string username, int idMatchAPI, int matchday, string result1)
+        public static void InsertBets(string username, int idMatchAPI, DateTime utcdate, string result1)
         {
-            MySqlConnection connection = new MySqlConnection(GetConnectionString());
-            connection.Open();
-
-            MySqlCommand command = new MySqlCommand();
-
-            command = new MySqlCommand("InsertUpdateBets", connection)
+            if (DateTime.Now < utcdate)
             {
-                CommandType = CommandType.StoredProcedure
-            };
+                MySqlConnection connection = new MySqlConnection(GetConnectionString());
+                connection.Open();
 
-            command.Parameters.Add(new MySqlParameter("Username", username));
-            command.Parameters.Add(new MySqlParameter("IdmatchAPI", idMatchAPI));
-            command.Parameters.Add(new MySqlParameter("Matchday", matchday));
-            command.Parameters.Add(new MySqlParameter("Result", result1));
+                MySqlCommand command = new MySqlCommand();
 
-            command.ExecuteNonQuery();
+                command = new MySqlCommand("InsertUpdateBets", connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
 
-            connection.Close();
+                command.Parameters.Add(new MySqlParameter("Username", username));
+                command.Parameters.Add(new MySqlParameter("IdmatchAPI", idMatchAPI));
+                command.Parameters.Add(new MySqlParameter("Result", result1));
+
+                command.ExecuteNonQuery();
+
+                connection.Close();
+            }
         }
 
         public static EmailBet GetEmailBetByToken(string token)
@@ -213,6 +230,7 @@ namespace PenaltyV2.Data
                        Hometeam = m.Hometeam,
                        Hometeamgoals = m.Hometeamgoals,
                        IdMatchAPI = m.IdmatchAPI,
+                       UtcDate = (DateTime)m.UtcDate,
                        Result1 = m.Result1,
                    }).ToList();
 

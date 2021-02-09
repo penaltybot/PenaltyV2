@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using PenaltyV2.Data;
 using PenaltyV2.Models;
@@ -42,40 +43,53 @@ namespace PenaltyV2.Areas.Identity.Pages.Account
 
         public string ReturnUrl { get; set; }
 
+        public SelectList FavoriteTeam { get; set; }
+
+        //public IEnumerable<SelectListItem> FavoriteTeams { get; set; }
+
         public class InputModel
         {
+            
+
             [Required]
             [EmailAddress]
-            [Display(Name = "Email")]
+            [Display(Name = "E-mail")]
             public string Email { get; set; }
 
             [Required]
-            [Display(Name = "Username")]
+            [Display(Name = "Utilizador")]
             public string Username { get; set; }
 
             [Required]
-            [Display(Name = "Name")]
+            [Display(Name = "Nome")]
             public string Name { get; set; }
 
             [Required]
-            [Display(Name = "FavoriteTeam")]
+            [Display(Name = "Equipa favorita")]
             public string FavoriteTeam { get; set; }
+            
+            //public string FavoriteTeam { get; set; }
 
             [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [StringLength(100, ErrorMessage = "A {0} tem de ter pelo menos {2} e um máximo de {1} caracteres.", MinimumLength = 6)]
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
             public string Password { get; set; }
 
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            [Display(Name = "Confirmar a password")]
+            [Compare("Password", ErrorMessage = "A password e a password de confirmação não são iguais.")]
             public string ConfirmPassword { get; set; }
         }
 
         public void OnGet(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
+
+            List<Teams> teams = Database.GetTeams(_dbContext);
+            FavoriteTeam = new SelectList(teams, "Name", "Name");
+            //FavoriteTeams = selectListItems;
+            //Input.FavoriteTeam = selectListItems;
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
@@ -124,5 +138,6 @@ namespace PenaltyV2.Areas.Identity.Pages.Account
             _dbContext.SaveChanges();
 
         }
+
     }
 }

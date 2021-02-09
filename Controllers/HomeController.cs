@@ -38,7 +38,7 @@ namespace PenaltyV2.Controllers
 
             if (emailBet != null)
             {
-                Database.InsertBets(emailBet.Username, Convert.ToInt32(emailBet.IdmatchAPI), 0, emailBet.Result);
+            //    Database.InsertBets(emailBet.Username, Convert.ToInt32(emailBet.IdmatchAPI), 0, emailBet.Result);
             }
 
             return View();
@@ -114,16 +114,19 @@ namespace PenaltyV2.Controllers
             List<MatchesBets> list2 = Database.GetBetsByUserAndMatchday(matchday, User.Identity.Name, _dbContext);
             if (list2.Count > 0)
             {
-                DateTime UtcDate = (DateTime)list2.First().UtcDate;
-                //TODO: Colocar as horas no webconfig
-                if (DateTime.Today.AddHours(6.00) > UtcDate)
+                //Basta um jogo da jornada não ter começado para a jornada não estar fechada
+                foreach (var item in list2)
                 {
-                    ViewBag.JornadaFechada = true;
+                    if (DateTime.Now > item.UtcDate)
+                    {
+                        ViewBag.JornadaFechada = true;
+                    }
+                    else
+                    {
+                        ViewBag.JornadaFechada = false;
+                    }
                 }
-                else
-                {
-                    ViewBag.JornadaFechada = false;
-                }
+
             }
 
             return View(list2);
@@ -131,16 +134,16 @@ namespace PenaltyV2.Controllers
 
         [Authorize]
         [HttpPost]
-        public ActionResult UserBets(string[] rbResult, int[] idmatchAPI, int[] matchday)
+        public ActionResult UserBets(string[] rbResult, int[] idmatchAPI, DateTime[] utcdate, int matchday)
         {
-
-            matchdayViewbags((int)matchday[0]);
+            //Ideia: Mandar o utcdate por parametro também e comparar
+            matchdayViewbags(matchday);
             string username = User.Identity.Name;
             try
             {
                 for (int i = 0; i < rbResult.Length; i++)
                 {
-                    Database.InsertBets(username, idmatchAPI[i], matchday[i], rbResult[i]);
+                    Database.InsertBets(username, idmatchAPI[i], utcdate[i], rbResult[i]);
                 }
                 ViewBag.Sucesso = "Apostas inseridas com sucesso!";
             }
@@ -153,19 +156,22 @@ namespace PenaltyV2.Controllers
             List<Matches> qry = Database.GetMatches(_dbContext);
             ViewBag.MatchesDay = (from s in qry orderby s.Matchday select s.Matchday).Distinct();
 
-            List<MatchesBets> list2 = Database.GetBetsByUserAndMatchday(matchday[0], User.Identity.Name, _dbContext);
+            List<MatchesBets> list2 = Database.GetBetsByUserAndMatchday(matchday, User.Identity.Name, _dbContext);
             if (list2.Count > 0)
             {
-                DateTime UtcDate = (DateTime)list2.First().UtcDate;
-                //TODO: Colocar as horas no webconfig
-                if (DateTime.Today.AddHours(6) > UtcDate)
+                //Basta um jogo da jornada não ter começado para a jornada não estar fechada
+                foreach (var item in list2)
                 {
-                    ViewBag.JornadaFechada = true;
+                    if (DateTime.Now > item.UtcDate)
+                    {
+                        ViewBag.JornadaFechada = true;
+                    }
+                    else
+                    {
+                        ViewBag.JornadaFechada = false;
+                    }
                 }
-                else
-                {
-                    ViewBag.JornadaFechada = false;
-                }
+              
             }
 
             return View(list2);

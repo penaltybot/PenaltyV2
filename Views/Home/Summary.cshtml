@@ -61,38 +61,45 @@ else
                 string idtxtaway = "txtaway" + item.IdMatchAPI;
 
 
-                <tr>
-                    <th scope="row">@(i + 1)</th>
+            <tr>
+                <th scope="row">@(i + 1)</th>
 
-                    <td>@item.Hometeam</td>
-                    <td align="center" width="20" height="20">@item.Hometeamgoals - @item.Awayteamgoals</td>
-                    <td>@item.Awayteam</td>
+                <td>@item.Hometeam</td>
+                <td align="center" width="20" height="20">@item.Hometeamgoals - @item.Awayteamgoals</td>
+                <td>@item.Awayteam</td>
 
-                    @foreach (var item2 in item.Userbets)
+                @foreach (var item2 in item.Userbets)
+                {
+                    if (item2.Score != null)
                     {
-
-                        if (item2.Score != null)
+                        total[j] += (decimal)item2.Score;
+                        if (item2.Score == (decimal)0)
                         {
-                            total[j] += (decimal)item2.Score;
-                            if (item2.Score == (decimal)0)
-                            {
-                                <td style="background-color:palevioletred; border-style:solid">
-                                    @item2.Score [@item2.Result]
-                                </td>
-                            }
-                            else if (item2.Perfect == 1)
-                            {
-                                <td style="background-color: greenyellow; border-style: solid">
-                                    @item2.Score [@item2.Result]
-                                </td>
-                            }
-                            else
-                            {
-                                <td style="background-color: yellow; border-style: solid">
-                                    @item2.Score [@item2.Result]
-                                </td>
-                            }
+                            <td style="background-color:palevioletred; border-style:solid">
+                                @item2.Score [@item2.Result]
+                            </td>
+                        }
+                        else if (item2.Perfect == 1)
+                        {
+                            <td style="background-color: greenyellow; border-style: solid">
+                                @item2.Score [@item2.Result]
+                            </td>
+                        }
+                        else
+                        {
+                            <td style="background-color: yellow; border-style: solid">
+                                @item2.Score [@item2.Result]
+                            </td>
+                        }
 
+                    }
+                    else
+                    {
+                        if ((DateTime.Now > item.UtcDate) && (item2.Result != null))
+                        {
+                            <td style="background-color: yellow; border-style: solid">
+                                - [@item2.Result]
+                            </td>
                         }
                         else
                         {
@@ -100,10 +107,11 @@ else
                                 N.A.
                             </td>
                         }
-                        j++;
                     }
+                    j++;
+                }
 
-                </tr>
+            </tr>
 
                 i++;
             }

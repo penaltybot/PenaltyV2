@@ -39,6 +39,7 @@ else
 {
 
     int i = 0;
+    int jogo = 0;
     string nulo = "---";
 
 
@@ -84,32 +85,32 @@ else
 
 
                     <tr>
-                        <th scope="row">@(i+1)</th>
-                        <td><input name="matchday[@i]" type="hidden" value="@item.Matchday"></td>
+                        <th scope="row">@(jogo + 1)</th>
+                        <td></td>
                         <td><img width="30" height="30" src="~/Images/@urlimagehome" /> @item.Hometeam</td>
                         <td></td>
                         <td>
                             <div class="toggle-radio">
                                 @if (item.BetResult1 == "H")
                                 {
-                                    if (!(ViewBag.JornadaFechada))
+                                    if (!(DateTime.Now > item.UtcDate))
                                     {
                                         <input width="60" type="radio" name="rbResult[@i]" id="rbWin[@i]" value="H" checked>
                                     }
                                     else
                                     {
-                                        <input width="60" type="radio" name="rbResult[@i]" id="rbWin[@i]" value="H" checked disabled>
+                                        <input width="60" type="radio" value="H" checked disabled>
                                     }
                                 }
                                 else
                                 {
-                                    if (!(ViewBag.JornadaFechada))
+                                    if (!(DateTime.Now > item.UtcDate))
                                     {
                                         <input width="60" type="radio" name="rbResult[@i]" id="rbWin[@i]" value="H">
                                     }
                                     else
                                     {
-                                        <input width="60" type="radio" name="rbResult[@i]" id="rbWin[@i]" value="H" disabled>
+                                        <input width="60" type="radio" value="H" disabled>
                                     }
                                 }
                                 <label for="rbWin[@i]" style="width:60px">
@@ -124,24 +125,24 @@ else
                                 </label>
                                 @if (item.BetResult1 == "D")
                                 {
-                                    if (!(ViewBag.JornadaFechada))
+                                    if (!(DateTime.Now > item.UtcDate))
                                     {
                                         <input type="radio" name="rbResult[@i]" id="rbDraw[@i]" value="D" checked>
                                     }
                                     else
                                     {
-                                        <input type="radio" name="rbResult[@i]" id="rbDraw[@i]" value="D" checked disabled>
+                                        <input type="radio" value="D" checked disabled>
                                     }
                                 }
                                 else
                                 {
-                                    if (!(ViewBag.JornadaFechada))
+                                    if (!(DateTime.Now > item.UtcDate))
                                     {
                                         <input type="radio" name="rbResult[@i]" id="rbDraw[@i]" value="D">
                                     }
                                     else
                                     {
-                                        <input type="radio" name="rbResult[@i]" id="rbDraw[@i]" value="D" disabled>
+                                        <input type="radio" value="D" disabled>
                                     }
                                 }
                                 <label for="rbDraw[@i]" style="width:60px">
@@ -156,24 +157,24 @@ else
                                 </label>
                                 @if (item.BetResult1 == "A")
                                 {
-                                    if (!(ViewBag.JornadaFechada))
+                                    if (!(DateTime.Now > item.UtcDate))
                                     {
                                         <input width="60" type="radio" name="rbResult[@i]" id="rbLose[@i]" value="A" checked>
                                     }
                                     else
                                     {
-                                        <input width="60" type="radio" name="rbResult[@i]" id="rbLose[@i]" value="A" checked disabled>
+                                        <input width="60" type="radio" value="A" checked disabled>
                                     }
                                 }
                                 else
                                 {
-                                    if (!(ViewBag.JornadaFechada))
+                                    if (!(DateTime.Now > item.UtcDate))
                                     {
                                         <input width="60" type="radio" name="rbResult[@i]" id="rbLose[@i]" value="A">
                                     }
                                     else
                                     {
-                                        <input width="60" type="radio" name="rbResult[@i]" id="rbLose[@i]" value="A" disabled>
+                                        <input width="60" type="radio" value="A" disabled>
                                     }
                                 }
                                 <label for="rbLose[@i]" style="width:60px">
@@ -190,7 +191,7 @@ else
                         </td>
                         <td></td>
                         <td><img width="30" height="30" src="~/Images/@urlimageaway" /> @item.Awayteam</td>
-                        <td><input name="idmatchAPI[@i]" type="hidden" value="@item.IdMatchAPI"></td>
+                        <td></td>
                         <td>@item.UtcDate.ToString("g")</td>
                         <td>
                             @if (item.Score != null)
@@ -207,9 +208,16 @@ else
                             }
                         </td>
                     </tr>
+                    @if (!(DateTime.Now > item.UtcDate))
+                    {
+                        <input name="idmatchAPI[@i]" type="hidden" value="@item.IdMatchAPI">
+                        <input name="utcdate[@i]" type="hidden" value="@item.UtcDate">
+                        <input name="matchday" type="hidden" value="@item.Matchday">
+                        i++;
+                    }
 
 
-                    i++;
+                    jogo++;
                 }
             </tbody>
         </table>

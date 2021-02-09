@@ -12,6 +12,7 @@ namespace PenaltyV2.Models
         public Nullable<int> Hometeamgoals { get; set; }
         public string Awayteam { get; set; }
         public Nullable<int> Awayteamgoals { get; set; }
+        public DateTime UtcDate { get; set; }
         public string Result1 { get; set; }
         public List<UsersBets> Userbets { get; set; }
     }
