@@ -61,14 +61,25 @@ namespace PenaltyV2.Controllers
         [Authorize]
         public IActionResult UserScores(string league)
         {
+            //Só para o caso de ser necessario mais tarde: IEnumerable<string> ligas = ((IEnumerable<string>)(from s in qry orderby s.Id select s.LeagueName));
 
-            List<Leagues> qry = Database.GetLeagues(_dbContext);
-            IEnumerable<string> ligas = ((IEnumerable<string>)(from s in qry orderby s.Id select s.LeagueName));
+            string username = User.Identity.Name;
+            List<string> userLeagues = Database.GetLeagues(username,_dbContext);          
+            IEnumerable<string> ligas = (IEnumerable<string>)userLeagues;
             ViewBag.Ligas = ligas;
 
             if (string.IsNullOrEmpty(league))
             {
+                //Se o nome da liga não vier por query string, automaticamente é selecionada a primeira da lista de ligas do utilizador
                 league = ligas.First();
+            }else
+            {
+                //Se o nome da liga vier por query string, verifica-se se esse nome está na lista das ligas do utilizador  
+                if(!userLeagues.Contains(league))
+                {
+                    //Se não estiver "limpa-se" o nome da liga e provavelmente não se irá retornar nada da BD
+                    league = "Não pertences aqui!"; 
+                }              
             }
 
             List<Userscores> userscores = Database.GetUserscores(_dbContext, league);

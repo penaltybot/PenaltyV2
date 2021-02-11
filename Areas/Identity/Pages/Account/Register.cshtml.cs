@@ -104,7 +104,8 @@ namespace PenaltyV2.Areas.Identity.Pages.Account
                     InsertUserInfo( new Usersinfo {
                         Username = Input.Username,
                         Name = Input.Name,
-                        Favoriteteam = Input.FavoriteTeam                      
+                        Favoriteteam = Input.FavoriteTeam,
+                        Leagues = "Global"
                     });
                     _logger.LogInformation("User created a new account with password.");
 

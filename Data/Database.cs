@@ -43,20 +43,27 @@ namespace PenaltyV2.Data
             return qry;
         }
 
-        internal static List<Leagues> GetLeagues(ApplicationDbContext dbContext)
+        internal static List<string> GetLeagues(string username, ApplicationDbContext dbContext)
         {
             //Melhorar isto para ir antes à tabela dos users
-            List<Leagues> qry = new List<Leagues>();
-
-            qry = (from l in dbContext.Leagues
-                   select new Leagues
+            Usersinfo qry = new Usersinfo();
+            List<String> userLeagues = new List<string>();
+            qry = (from u in dbContext.Usersinfo
+                   where u.Username == username
+                   select new Usersinfo
                    {
-                       Id = l.Id,
-                       LeagueIDAPI = l.LeagueIDAPI,
-                       LeagueName = l.LeagueName
-                   }).ToList();
+                        Leagues = u.Leagues
+                   }).FirstOrDefault();
+            if (qry.Leagues != null)
+            {
+               userLeagues = qry.Leagues.Split(';').ToList();
+            }else
+            {
+               userLeagues.Add("---");
+            }
+            
 
-            return qry;
+            return userLeagues;
 
         }
 
