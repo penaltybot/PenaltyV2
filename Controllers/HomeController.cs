@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using PenaltyV2.Data;
@@ -21,7 +22,33 @@ namespace PenaltyV2.Controllers
         {
             _logger = logger;
             _dbContext = dbContext;
+
         }
+
+        public void MatchdayViewbags(int matchday)
+        {
+            ViewBag.Message = "Jornada: " + matchday.ToString();
+            ViewBag.JornadaAnt = matchday - 1;
+            ViewBag.JornadaSeg = matchday + 1;
+        }
+
+        public void LoadUserLeagues()
+        {
+            //Só para o caso de ser necessario mais tarde: IEnumerable<string> ligas = ((IEnumerable<string>)(from s in qry orderby s.Id select s.LeagueName));
+            if(User.Identity.Name != null)
+            {
+                string username = User.Identity.Name;
+                List<string> userLeagues = Database.GetLeagues(username, _dbContext);
+                IEnumerable<string> ligas = (IEnumerable<string>)userLeagues;
+                ViewBag.Ligas = ligas;
+            }
+        }
+
+        public override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            LoadUserLeagues();
+        }
+
         public IActionResult Index()
         {
             return View();
@@ -32,54 +59,44 @@ namespace PenaltyV2.Controllers
             return View();
         }
 
+        public IActionResult Help()
+        {
+            return View();
+        }
+
         public IActionResult SubmitEmailBet(string token)
         {
             EmailBet emailBet = Database.GetEmailBetByToken(token);
 
             if (emailBet != null)
             {
-            //    Database.InsertBets(emailBet.Username, Convert.ToInt32(emailBet.IdmatchAPI), 0, emailBet.Result);
+                //    Database.InsertBets(emailBet.Username, Convert.ToInt32(emailBet.IdmatchAPI), 0, emailBet.Result);
             }
 
             return View();
         }
 
-        public IActionResult Help()
-        {
-            return View();
-        }
-
-        public void matchdayViewbags(int matchday)
-        {
-            ViewBag.Message = "Jornada: " + matchday.ToString();
-            ViewBag.JornadaAnt = matchday - 1;
-            ViewBag.JornadaSeg = matchday + 1;
-        }
-
-
-
         [Authorize]
         public IActionResult UserScores(string league)
         {
-            //Só para o caso de ser necessario mais tarde: IEnumerable<string> ligas = ((IEnumerable<string>)(from s in qry orderby s.Id select s.LeagueName));
+            
 
-            string username = User.Identity.Name;
-            List<string> userLeagues = Database.GetLeagues(username,_dbContext);          
-            IEnumerable<string> ligas = (IEnumerable<string>)userLeagues;
-            ViewBag.Ligas = ligas;
+
+            IEnumerable<string> ligas = ViewBag.Ligas;
 
             if (string.IsNullOrEmpty(league))
             {
                 //Se o nome da liga não vier por query string, automaticamente é selecionada a primeira da lista de ligas do utilizador
                 league = ligas.First();
-            }else
+            }
+            else
             {
                 //Se o nome da liga vier por query string, verifica-se se esse nome está na lista das ligas do utilizador  
-                if(!userLeagues.Contains(league))
+                if (!ligas.Contains(league))
                 {
                     //Se não estiver "limpa-se" o nome da liga e provavelmente não se irá retornar nada da BD
-                    league = "Não pertences aqui!"; 
-                }              
+                    league = "Não pertences aqui!";
+                }
             }
 
             List<Userscores> userscores = Database.GetUserscores(_dbContext, league);
@@ -90,12 +107,11 @@ namespace PenaltyV2.Controllers
         [Authorize]
         public ActionResult TeamMatches(int? matchday)
         {
-
             if (matchday == null)
             {
                 matchday = Database.GetCurrentMatchDay(_dbContext);
             }
-            matchdayViewbags((int)matchday);
+            MatchdayViewbags((int)matchday);
 
             List<Matches> qry = Database.GetMatches(_dbContext);
 
@@ -117,7 +133,7 @@ namespace PenaltyV2.Controllers
             {
                 matchday = Database.GetCurrentMatchDay(_dbContext);
             }
-            matchdayViewbags((int)matchday);
+            MatchdayViewbags((int)matchday);
 
             List<Matches> qry = Database.GetMatches(_dbContext);
             ViewBag.MatchesDay = (from s in qry orderby s.Matchday select s.Matchday).Distinct();
@@ -148,7 +164,7 @@ namespace PenaltyV2.Controllers
         public ActionResult UserBets(string[] rbResult, int[] idmatchAPI, DateTime[] utcdate, int matchday)
         {
             //Ideia: Mandar o utcdate por parametro também e comparar
-            matchdayViewbags(matchday);
+            MatchdayViewbags(matchday);
             string username = User.Identity.Name;
             try
             {
@@ -182,7 +198,7 @@ namespace PenaltyV2.Controllers
                         ViewBag.JornadaFechada = false;
                     }
                 }
-              
+
             }
 
             return View(list2);
@@ -190,19 +206,29 @@ namespace PenaltyV2.Controllers
         }
 
         [Authorize]
-        public ActionResult Summary(int? matchday)
+        public ActionResult Summary(int? matchday, string league)
         {
-
+            IEnumerable<string> ligas = ViewBag.Ligas;
+            if (string.IsNullOrEmpty(league))
+            {
+                league = ligas.First();
+                ViewBag.LigaSelecionada = league;        
+            }
+            else
+            {
+                ViewBag.LigaSelecionada = league;
+            }
+            
             if (matchday == null)
             {
                 matchday = Database.GetCurrentMatchDay(_dbContext);
             }
-            matchdayViewbags((int)matchday);
+            MatchdayViewbags((int)matchday);
 
             List<Matches> qry = Database.GetMatches(_dbContext);
             ViewBag.MatchesDay = (from s in qry orderby s.Matchday select s.Matchday).Distinct();
 
-            List<ScoresUserBets> list2 = Database.GetScoresUserBets(matchday, _dbContext);
+            List<ScoresUserBets> list2 = Database.GetScoresUserBets(matchday, league, _dbContext);
             if (list2.Count > 0)
             {
                 List<UsersBets> usersbets = list2.First().Userbets;

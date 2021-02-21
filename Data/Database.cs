@@ -22,6 +22,7 @@ namespace PenaltyV2.Data
         {
             //TODO: Tenho de ir buscar o competition year
             List<Userscores> qry = new List<Userscores>();
+            //Warning: Cuidado com o contains, se houver 2 ligas chamadas FCT e FCT2 por exemplo, quem tiver na FCT vai poder ver FCT2
             qry = (from us in dbContext.Userscores
                    where us.Competitionyear == "2020"
                    join ui in dbContext.Usersinfo
@@ -221,7 +222,7 @@ namespace PenaltyV2.Data
             return emailBet;
         }
 
-        internal static List<ScoresUserBets> GetScoresUserBets(int? matchday, ApplicationDbContext dbContext)
+        internal static List<ScoresUserBets> GetScoresUserBets(int? matchday,string league, ApplicationDbContext dbContext)
         {
             List<ScoresUserBets> qry = new List<ScoresUserBets>();
 
@@ -246,9 +247,10 @@ namespace PenaltyV2.Data
             {
                 List<UsersBets> betslist = new List<UsersBets>();
 
-
+                //Warning: Cuidado com o contains, se houver 2 ligas chamadas FCT e FCT2 por exemplo, quem tiver na FCT vai poder ver FCT2
                 betslist = (from ud2 in
                  (from ud in dbContext.Usersinfo
+                  where ud.Leagues.Contains(league)
                   select ud)
                             join b2 in
                              (from b in dbContext.Bets

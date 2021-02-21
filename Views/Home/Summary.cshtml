@@ -1,14 +1,14 @@
 ﻿@model IEnumerable<PenaltyV2.Models.ScoresUserBets>
 
 @{
-    ViewBag.Title = "Sumário de Resultados";
+    ViewBag.Title = "Sumário de Resultados (" + ViewBag.LigaSelecionada + ")";
 }
 <div class="d-flex">
     <div class="p-2 mr-auto">
         <h3>@ViewBag.Title</h3>
     </div>
     <div class="p-2">
-        <h3>Jornada: @Html.DropDownList("ddjornada", new SelectList(ViewBag.MatchesDay), "---", new { @onchange = "callChangefunc(this.value)" })</h3>
+        <h4>Jornada: @Html.DropDownList("ddjornada", new SelectList(ViewBag.MatchesDay), "---", new { @onchange = "callChangefunc(this.value)" })</h4>
     </div>
 </div>
 
@@ -27,9 +27,9 @@ else
 
 <div class="d-flex justify-content-center">
     <h3>
-        <a href="/Home/Summary?matchday=@ViewBag.JornadaAnt"><i class="fa fa-arrow-left"></i></a>&nbsp;
+        <a href="/Home/Summary?matchday=@ViewBag.JornadaAnt&league=@ViewBag.LigaSelecionada"><i class="fa fa-arrow-left"></i></a>&nbsp;
         <b>@ViewBag.Message</b>
-        &nbsp;<a href="/Home/Summary?matchday=@ViewBag.JornadaSeg"><i class="fa fa-arrow-right"></i></a>
+        &nbsp;<a href="/Home/Summary?matchday=@ViewBag.JornadaSeg&league=@ViewBag.LigaSelecionada"><i class="fa fa-arrow-right"></i></a>
     </h3>
 </div>
 
@@ -151,7 +151,8 @@ else
 }
 
 <script>
+    var someStringValue = '@(ViewBag.LigaSelecionada)';
     function callChangefunc(val) {
-        window.location.href = "/Home/Summary?matchday=" + val;
+        window.location.href = "/Home/Summary?matchday=" + val + "&league=" + someStringValue;
     }
 </script>
