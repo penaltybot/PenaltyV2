@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -35,7 +36,7 @@ namespace PenaltyV2.Controllers
         public void LoadUserLeagues()
         {
             //Só para o caso de ser necessario mais tarde: IEnumerable<string> ligas = ((IEnumerable<string>)(from s in qry orderby s.Id select s.LeagueName));
-            if(User.Identity.Name != null)
+            if (User.Identity.Name != null)
             {
                 string username = User.Identity.Name;
                 List<string> userLeagues = Database.GetLeagues(username, _dbContext);
@@ -64,14 +65,38 @@ namespace PenaltyV2.Controllers
             return View();
         }
 
+        public IActionResult Audit(string IdmatchAPI)
+        {
+            List<string> auditLogs = new List<string>
+            {
+                Database.GetMd5(IdmatchAPI)
+            };
+
+            var auditFields = Database.GetMatchAuditFields(IdmatchAPI);
+
+            if (DateTime.Now > auditFields.UtcDate && !auditFields.Secret)
+            {
+                auditLogs.Add("");
+                auditLogs.Add("");
+                auditLogs.AddRange(Database.GetMatchBets(IdmatchAPI));
+            }
+
+            ViewBag.AuditLogs = auditLogs;
+
+            return View();
+        }
+
         public IActionResult SubmitEmailBet(string token)
         {
             EmailBet emailBet = Database.GetEmailBetByToken(token);
 
+            bool success = false;
             if (emailBet != null)
             {
-                //    Database.InsertBets(emailBet.Username, Convert.ToInt32(emailBet.IdmatchAPI), 0, emailBet.Result);
+                success = Database.InsertBets(emailBet.Username, Convert.ToInt32(emailBet.IdmatchAPI), Database.GetMatchTime(emailBet.IdmatchAPI), emailBet.Result);
             }
+
+            ViewBag.output = success ? "Aposta submetida com sucesso!" : "ERRO! APOSTA NÃO SUBMETIDA!";
 
             return View();
         }
@@ -79,9 +104,6 @@ namespace PenaltyV2.Controllers
         [Authorize]
         public IActionResult UserScores(string league)
         {
-            
-
-
             IEnumerable<string> ligas = ViewBag.Ligas;
 
             if (string.IsNullOrEmpty(league))
@@ -212,13 +234,13 @@ namespace PenaltyV2.Controllers
             if (string.IsNullOrEmpty(league))
             {
                 league = ligas.First();
-                ViewBag.LigaSelecionada = league;        
+                ViewBag.LigaSelecionada = league;
             }
             else
             {
                 ViewBag.LigaSelecionada = league;
             }
-            
+
             if (matchday == null)
             {
                 matchday = Database.GetCurrentMatchDay(_dbContext);

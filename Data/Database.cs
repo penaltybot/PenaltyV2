@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace PenaltyV2.Data
@@ -14,6 +15,12 @@ namespace PenaltyV2.Data
         public string Username { get; set; }
         public string IdmatchAPI { get; set; }
         public string Result { get; set; }
+    }
+
+    public class MatchAuditFields
+    {
+        public DateTime UtcDate { get; set; }
+        public bool Secret { get; set; }
     }
 
     public class Database
@@ -53,16 +60,17 @@ namespace PenaltyV2.Data
                    where u.Username == username
                    select new Usersinfo
                    {
-                        Leagues = u.Leagues
+                       Leagues = u.Leagues
                    }).FirstOrDefault();
             if (qry.Leagues != null)
             {
-               userLeagues = qry.Leagues.Split(';').ToList();
-            }else
-            {
-               userLeagues.Add("---");
+                userLeagues = qry.Leagues.Split(';').ToList();
             }
-            
+            else
+            {
+                userLeagues.Add("---");
+            }
+
 
             return userLeagues;
 
@@ -167,16 +175,14 @@ namespace PenaltyV2.Data
             return qry;
         }
 
-        public static void InsertBets(string username, int idMatchAPI, DateTime utcdate, string result1)
+        public static bool InsertBets(string username, int idMatchAPI, DateTime utcdate, string result1)
         {
             if (DateTime.Now < utcdate)
             {
                 MySqlConnection connection = new MySqlConnection(GetConnectionString());
                 connection.Open();
 
-                MySqlCommand command = new MySqlCommand();
-
-                command = new MySqlCommand("InsertUpdateBets", connection)
+                MySqlCommand command = new MySqlCommand("InsertUpdateBets", connection)
                 {
                     CommandType = CommandType.StoredProcedure
                 };
@@ -188,7 +194,11 @@ namespace PenaltyV2.Data
                 command.ExecuteNonQuery();
 
                 connection.Close();
+
+                return true;
             }
+
+            return false;
         }
 
         public static EmailBet GetEmailBetByToken(string token)
@@ -222,7 +232,113 @@ namespace PenaltyV2.Data
             return emailBet;
         }
 
-        internal static List<ScoresUserBets> GetScoresUserBets(int? matchday,string league, ApplicationDbContext dbContext)
+        public static MatchAuditFields GetMatchAuditFields(string IdmatchAPI)
+        {
+            MySqlConnection connection = new MySqlConnection(GetConnectionString());
+            connection.Open();
+
+            MySqlCommand getMatchAuditFieldsCommand = new MySqlCommand("GetMatchAuditFields", connection)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+            getMatchAuditFieldsCommand.Parameters.Add(new MySqlParameter("IdmatchAPI", IdmatchAPI));
+
+            MySqlDataReader getMatchAuditFieldsReader = getMatchAuditFieldsCommand.ExecuteReader();
+
+            MatchAuditFields matchAuditFields = null;
+            if (getMatchAuditFieldsReader.HasRows)
+            {
+                getMatchAuditFieldsReader.Read();
+
+                matchAuditFields = new MatchAuditFields()
+                {
+                    UtcDate = Convert.ToDateTime(getMatchAuditFieldsReader["UtcDate"]),
+                    Secret = Convert.ToBoolean(getMatchAuditFieldsReader["Secret"])
+                };
+            }
+
+            getMatchAuditFieldsReader.Close();
+
+            return matchAuditFields;
+        }
+
+        public static DateTime GetMatchTime(string IdmatchAPI)
+        {
+            MySqlConnection connection = new MySqlConnection(GetConnectionString());
+            connection.Open();
+
+            MySqlCommand getMatchTimeCommand = new MySqlCommand("GetMatchTime", connection)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+            getMatchTimeCommand.Parameters.Add(new MySqlParameter("IdmatchAPI", IdmatchAPI));
+
+            MySqlDataReader getMatchTimeReader = getMatchTimeCommand.ExecuteReader();
+
+            DateTime matchTime = DateTime.MaxValue;
+            if (getMatchTimeReader.HasRows)
+            {
+                getMatchTimeReader.Read();
+
+                matchTime = Convert.ToDateTime(getMatchTimeReader["UtcDate"]);
+            }
+
+            getMatchTimeReader.Close();
+
+            return matchTime;
+        }
+
+        public static string GetMd5(string IdmatchAPI)
+        {
+            MySqlConnection connection = new MySqlConnection(GetConnectionString());
+            connection.Open();
+
+            MySqlCommand getMd5MatchBetsCommand = new MySqlCommand("GetMd5MatchBets", connection)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+            getMd5MatchBetsCommand.Parameters.Add(new MySqlParameter("IdmatchAPI", IdmatchAPI));
+
+            MySqlDataReader getMd5MatchBetsReader = getMd5MatchBetsCommand.ExecuteReader();
+
+            string md5 = null;
+            if (getMd5MatchBetsReader.HasRows)
+            {
+                getMd5MatchBetsReader.Read();
+
+                md5 = Convert.ToString(getMd5MatchBetsReader["MD5"]);
+            }
+
+            getMd5MatchBetsReader.Close();
+
+            return md5;
+        }
+
+        public static List<string> GetMatchBets(string IdmatchAPI)
+        {
+            MySqlConnection connection = new MySqlConnection(GetConnectionString());
+            connection.Open();
+
+            MySqlCommand getMatchBetsCommand = new MySqlCommand("GetMatchBets", connection)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+            getMatchBetsCommand.Parameters.Add(new MySqlParameter("IdmatchAPI", IdmatchAPI));
+
+            MySqlDataReader getMatchBetsReader = getMatchBetsCommand.ExecuteReader();
+
+            List<string> matchLogs = new List<string>();
+            while (getMatchBetsReader.Read())
+            {
+                matchLogs.Add(getMatchBetsReader.GetString("MatchLogs"));
+            }
+
+            getMatchBetsReader.Close();
+
+            return matchLogs;
+        }
+
+        internal static List<ScoresUserBets> GetScoresUserBets(int? matchday, string league, ApplicationDbContext dbContext)
         {
             List<ScoresUserBets> qry = new List<ScoresUserBets>();
 
