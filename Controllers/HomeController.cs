@@ -65,6 +65,37 @@ namespace PenaltyV2.Controllers
             return View();
         }
 
+        public IActionResult SubmitAutoBets()
+        {
+            Dictionary<int, int> teamHierarchy = new Dictionary<int, int>()
+            {
+                { 242, 1 },
+                { 211, 2 },
+                { 225, 3 },
+                { 222, 4 },
+                { 227, 5 },
+                { 214, 6 },
+                { 224, 7 },
+                { 221, 8 },
+                { 215, 9 },
+                { 231, 10 },
+                { 212, 11 },
+                { 217, 12 },
+                { 216, 13 },
+                { 234, 14 },
+                { 228, 15 },
+                { 762, 16 },
+                { 218, 17 },
+                { 226, 18 }
+            };
+
+            string username = "tbento";
+
+            Database.SubmitAutoBets(username, teamHierarchy);
+
+            return View();
+        }
+
         public IActionResult Audit(string IdmatchAPI)
         {
             List<string> auditLogs = new List<string>
@@ -72,7 +103,7 @@ namespace PenaltyV2.Controllers
                 Database.GetMd5(IdmatchAPI)
             };
 
-            var auditFields = Database.GetMatchAuditFields(IdmatchAPI);
+            var auditFields = Database.GetMatchDetails(IdmatchAPI);
 
             if (DateTime.Now > auditFields.UtcDate && !auditFields.Secret)
             {
@@ -91,12 +122,14 @@ namespace PenaltyV2.Controllers
             EmailBet emailBet = Database.GetEmailBetByToken(token);
 
             bool success = false;
+            MatchDetails matchDetails = null;
             if (emailBet != null)
             {
-                success = Database.InsertBets(emailBet.Username, Convert.ToInt32(emailBet.IdmatchAPI), Database.GetMatchTime(emailBet.IdmatchAPI), emailBet.Result);
+                matchDetails = Database.GetMatchDetails(emailBet.IdmatchAPI);
+                success = Database.InsertBets(emailBet.Username, Convert.ToInt32(emailBet.IdmatchAPI), matchDetails.UtcDate, emailBet.Result);
             }
 
-            ViewBag.output = success ? "Aposta submetida com sucesso!" : "ERRO! APOSTA NÃO SUBMETIDA!";
+            ViewBag.output = success ? "Aposta [" + emailBet.Result + "]" + " submetida para " + matchDetails.HomeTeam + "-" + matchDetails.AwayTeam + " com sucesso! Podes fechar esta janela." : "ERRO! APOSTA NÃO SUBMETIDA!";
 
             return View();
         }

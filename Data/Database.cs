@@ -17,8 +17,10 @@ namespace PenaltyV2.Data
         public string Result { get; set; }
     }
 
-    public class MatchAuditFields
+    public class MatchDetails
     {
+        public string HomeTeam { get; set; }
+        public string AwayTeam { get; set; }
         public DateTime UtcDate { get; set; }
         public bool Secret { get; set; }
     }
@@ -88,6 +90,90 @@ namespace PenaltyV2.Data
                    }).ToList();
 
             return qry;
+        }
+
+        private static Dictionary<string, string> GetGlobalConstants(MySqlConnection connection)
+        {
+            MySqlCommand globalConstantsCommand = new MySqlCommand("GetGlobalConstants", connection)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+            MySqlDataReader globalConstantsReader = globalConstantsCommand.ExecuteReader();
+
+            Dictionary<string, string> globalConstants = new Dictionary<string, string>();
+            while (globalConstantsReader.Read())
+            {
+                globalConstants.Add(
+                    globalConstantsReader["Constant"].ToString(),
+                    globalConstantsReader["Value"].ToString());
+            }
+
+            globalConstantsReader.Close();
+
+            return globalConstants;
+        }
+
+        internal static void SubmitAutoBets(string username, Dictionary<int, int> teamHierarchy)
+        {
+            MySqlConnection connection = new MySqlConnection(GetConnectionString());
+            connection.Open();
+
+            Dictionary<string, string> globalConstants = GetGlobalConstants(connection);
+            string leagueId = globalConstants["LEAGUE_ID"];
+
+            MySqlCommand getAvailableFixturesForAutoBetsCommand = new MySqlCommand("GetAvailableFixturesForAutoBets", connection)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+            getAvailableFixturesForAutoBetsCommand.Parameters.Add(new MySqlParameter("LeagueID", leagueId));
+
+            MySqlDataReader getAvailableFixturesForAutoBetsReader = getAvailableFixturesForAutoBetsCommand.ExecuteReader();
+
+            while (getAvailableFixturesForAutoBetsReader.Read())
+            {
+                int idmatchAPI = getAvailableFixturesForAutoBetsReader.GetInt32("IdmatchAPI");
+                DateTime utcDate = getAvailableFixturesForAutoBetsReader.GetDateTime("UtcDate");
+                int idhometeam = getAvailableFixturesForAutoBetsReader.GetInt32("Idhometeam");
+                int idawayteam = getAvailableFixturesForAutoBetsReader.GetInt32("Idawayteam");
+
+                string result = ComputeAutoBet(teamHierarchy, idhometeam, idawayteam);
+
+                if (!result.Equals("X"))
+                {
+                    InsertBets(username, idmatchAPI, utcDate, result);
+                }
+            }
+
+            getAvailableFixturesForAutoBetsReader.Close();
+        }
+
+        private static string ComputeAutoBet(Dictionary<int, int> teamHierarchy, int idhometeam, int idawayteam)
+        {
+            if (!teamHierarchy.TryGetValue(idhometeam, out int homeTeamPlace))
+            {
+                return "X";
+            }
+            if (!teamHierarchy.TryGetValue(idawayteam, out int awayTeamPlace))
+            {
+                return "X";
+            }
+
+            if (homeTeamPlace > awayTeamPlace)
+            {
+                return "A";
+            }
+            else if (homeTeamPlace < awayTeamPlace)
+            {
+                return "H";
+            }
+            else if (homeTeamPlace == awayTeamPlace)
+            {
+                return "D";
+            }
+            else
+            {
+                return "X";
+            }
         }
 
         public static List<Matches> GetMatches(ApplicationDbContext dbContext)
@@ -232,34 +318,36 @@ namespace PenaltyV2.Data
             return emailBet;
         }
 
-        public static MatchAuditFields GetMatchAuditFields(string IdmatchAPI)
+        public static MatchDetails GetMatchDetails(string IdmatchAPI)
         {
             MySqlConnection connection = new MySqlConnection(GetConnectionString());
             connection.Open();
 
-            MySqlCommand getMatchAuditFieldsCommand = new MySqlCommand("GetMatchAuditFields", connection)
+            MySqlCommand getMatchDetailsCommand = new MySqlCommand("GetMatchDetails", connection)
             {
                 CommandType = CommandType.StoredProcedure
             };
-            getMatchAuditFieldsCommand.Parameters.Add(new MySqlParameter("IdmatchAPI", IdmatchAPI));
+            getMatchDetailsCommand.Parameters.Add(new MySqlParameter("IdmatchAPI", IdmatchAPI));
 
-            MySqlDataReader getMatchAuditFieldsReader = getMatchAuditFieldsCommand.ExecuteReader();
+            MySqlDataReader getMatchDetailsReader = getMatchDetailsCommand.ExecuteReader();
 
-            MatchAuditFields matchAuditFields = null;
-            if (getMatchAuditFieldsReader.HasRows)
+            MatchDetails matchDetails = null;
+            if (getMatchDetailsReader.HasRows)
             {
-                getMatchAuditFieldsReader.Read();
+                getMatchDetailsReader.Read();
 
-                matchAuditFields = new MatchAuditFields()
+                matchDetails = new MatchDetails()
                 {
-                    UtcDate = Convert.ToDateTime(getMatchAuditFieldsReader["UtcDate"]),
-                    Secret = Convert.ToBoolean(getMatchAuditFieldsReader["Secret"])
+                    HomeTeam = Convert.ToString(getMatchDetailsReader["Hometeam"]),
+                    AwayTeam = Convert.ToString(getMatchDetailsReader["Awayteam"]),
+                    UtcDate = Convert.ToDateTime(getMatchDetailsReader["UtcDate"]),
+                    Secret = Convert.ToBoolean(getMatchDetailsReader["Secret"])
                 };
             }
 
-            getMatchAuditFieldsReader.Close();
+            getMatchDetailsReader.Close();
 
-            return matchAuditFields;
+            return matchDetails;
         }
 
         public static DateTime GetMatchTime(string IdmatchAPI)
