@@ -12,29 +12,29 @@
 </div>
 
 
-    @if (Model.Count() == 0)
-    {
-        <tr>
-            <td colspan="10">No Record's found.</td>
-        </tr>
-    }
-    else
-    {
+@if (Model.Count() == 0)
+{
+    <tr>
+        <td colspan="10">No Record's found.</td>
+    </tr>
+}
+else
+{
 
-        string nulo = "X";
-        int i = 0;
-
-
-
-        <div class="d-flex justify-content-center">
-            <h3>
-                <a href="/Home/TeamMatches?matchday=@ViewBag.JornadaAnt"><i class="fa fa-arrow-left"></i></a>&nbsp;
-                <b>@ViewBag.Message</b>
-                &nbsp;<a href="/Home/TeamMatches?matchday=@ViewBag.JornadaSeg"><i class="fa fa-arrow-right"></i></a>
-            </h3>
-        </div>
+    string nulo = "X";
+    int i = 0;
 
 
+
+    <div class="d-flex justify-content-center">
+        <h3>
+            <a href="/Home/TeamMatches?matchday=@ViewBag.JornadaAnt"><i class="fa fa-arrow-left"></i></a>&nbsp;
+            <b>@ViewBag.Message</b>
+            &nbsp;<a href="/Home/TeamMatches?matchday=@ViewBag.JornadaSeg"><i class="fa fa-arrow-right"></i></a>
+        </h3>
+    </div>
+
+    <div class="table-responsive">
         <table class="table table-sm table-hover">
             <thead>
                 <tr>
@@ -90,11 +90,11 @@
                 }
             </tbody>
         </table>
-
-    }
-
-    <script>
-        function callChangefunc(val) {
-            window.location.href = "/Home/TeamMatches?matchday=" + val;
+        </div>
         }
-    </script>
+
+        <script>
+            function callChangefunc(val) {
+                window.location.href = "/Home/TeamMatches?matchday=" + val;
+            }
+        </script>
