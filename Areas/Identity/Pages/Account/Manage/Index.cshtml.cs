@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using PenaltyV2.Data;
+using PenaltyV2.Models;
 
 namespace PenaltyV2.Areas.Identity.Pages.Account.Manage
 {
@@ -16,18 +19,23 @@ namespace PenaltyV2.Areas.Identity.Pages.Account.Manage
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IEmailSender _emailSender;
+        private readonly ApplicationDbContext _dbContext;
 
         public IndexModel(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            ApplicationDbContext dbContext)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
+            _dbContext = dbContext;
         }
         [Display(Name = "Utilizador")]
         public string Username { get; set; }
+
+        public SelectList FavoriteTeam { get; set; }
 
         public bool IsEmailConfirmed { get; set; }
 
@@ -47,26 +55,38 @@ namespace PenaltyV2.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+
+            [Required]
+            [Display(Name = "Equipa Favorita")]
+            public string FavoriteTeam { get; set; }
         }
 
         public async Task<IActionResult> OnGetAsync()
         {
+
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
+            ViewData["Ligas"] = Database.LoadUserLeagues(User.Identity.Name, _dbContext);
+
+            List<Teams> teams = Database.GetTeams(_dbContext);
+            FavoriteTeam = new SelectList(teams, "Name", "Name");
+            
 
             var userName = await _userManager.GetUserNameAsync(user);
             var email = await _userManager.GetEmailAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+            var favoriteteam = Database.GetUserInfo(user.UserName, _dbContext).Favoriteteam;
 
             Username = userName;
 
             Input = new InputModel
             {
                 Email = email,
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                FavoriteTeam = favoriteteam
             };
 
             IsEmailConfirmed = await _userManager.IsEmailConfirmedAsync(user);
@@ -109,6 +129,13 @@ namespace PenaltyV2.Areas.Identity.Pages.Account.Manage
                 }
             }
 
+            //Alterar dados tabela Usersinfo
+            UpdateUserInfo(new Usersinfo
+            {
+                Username = user.UserName,
+                Favoriteteam = Input.FavoriteTeam,
+            });
+
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "O teu perfil foi atualizado!";
             return RedirectToPage();
@@ -144,5 +171,18 @@ namespace PenaltyV2.Areas.Identity.Pages.Account.Manage
             StatusMessage = "Verification email sent. Please check your email.";
             return RedirectToPage();
         }
+        public void UpdateUserInfo(Usersinfo userupdatedinfo)
+        {
+            Usersinfo userinfo = Database.GetUserInfo(userupdatedinfo.Username, _dbContext);
+            if(userinfo.Favoriteteam != userupdatedinfo.Favoriteteam)
+            {
+                userinfo.Favoriteteam = userupdatedinfo.Favoriteteam;
+            }
+
+            _dbContext.Update(userinfo);
+            _dbContext.SaveChanges();
+
+        }
+
     }
 }

@@ -13,6 +13,8 @@ using Microsoft.EntityFrameworkCore;
 using PenaltyV2.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 
 namespace PenaltyV2
 {
@@ -67,6 +69,13 @@ namespace PenaltyV2
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture("pt-PT"),
+                SupportedCultures = new List<CultureInfo> { new CultureInfo("pt-PT") },
+                SupportedUICultures = new List<CultureInfo> { new CultureInfo("pt-PT") }
+            });
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

@@ -33,21 +33,15 @@ namespace PenaltyV2.Controllers
             ViewBag.JornadaSeg = matchday + 1;
         }
 
-        public void LoadUserLeagues()
-        {
-            //Só para o caso de ser necessario mais tarde: IEnumerable<string> ligas = ((IEnumerable<string>)(from s in qry orderby s.Id select s.LeagueName));
-            if (User.Identity.Name != null)
-            {
-                string username = User.Identity.Name;
-                List<string> userLeagues = Database.GetLeagues(username, _dbContext);
-                IEnumerable<string> ligas = (IEnumerable<string>)userLeagues;
-                ViewBag.Ligas = ligas;
-            }
-        }
+
 
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            LoadUserLeagues();
+            if (User.Identity.Name != null)
+            {
+                ViewData["Ligas"] = Database.LoadUserLeagues(User.Identity.Name, _dbContext);
+            }
+                    
         }
 
         public IActionResult Index()
@@ -218,7 +212,6 @@ namespace PenaltyV2.Controllers
         [HttpPost]
         public ActionResult UserBets(string[] rbResult, int[] idmatchAPI, DateTime[] utcdate, int matchday)
         {
-            //Ideia: Mandar o utcdate por parametro também e comparar
             MatchdayViewbags(matchday);
             string username = User.Identity.Name;
             try

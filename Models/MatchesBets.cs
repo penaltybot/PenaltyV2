@@ -7,6 +7,7 @@ namespace PenaltyV2.Models
 {
     public class MatchesBets
     {
+        
 
         public int IdMatch{ get; set; }
         public Nullable<int> Matchday { get; set; }
@@ -31,5 +32,7 @@ namespace PenaltyV2.Models
         public decimal? Score { get; set; }
         public int? Perfect { get; set; }
         public string BetResult1 { get; set; }
+        public decimal? Multiplier { get; set; }
+
     }
 }

@@ -25,9 +25,6 @@ else if (ViewBag.Error != null)
     </div>
 }
 
-@*<p>Use this area to provide additional information.</p>*@
-
-
 
 @if (Model.Count() == 0)
 {
@@ -44,183 +41,187 @@ else
 
 
 
-<div class="d-flex justify-content-center">
-    <h3>
-        <a href="/Home/UserBets?matchday=@ViewBag.JornadaAnt"><i class="fa fa-arrow-left"></i></a>&nbsp;
-        <b>@ViewBag.Message</b>
-        &nbsp;<a href="/Home/UserBets?matchday=@ViewBag.JornadaSeg"><i class="fa fa-arrow-right"></i></a>
-    </h3>
-</div>
+    <div class="d-flex justify-content-center">
+        <h3>
+            <a href="/Home/UserBets?matchday=@ViewBag.JornadaAnt"><i class="fa fa-arrow-left"></i></a>&nbsp;
+            <b>@ViewBag.Message</b>
+            &nbsp;<a href="/Home/UserBets?matchday=@ViewBag.JornadaSeg"><i class="fa fa-arrow-right"></i></a>
+        </h3>
+    </div>
     <form method="post" action="/Home/UserBets">
 
-
-        <table class="table table-sm table-hover">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th></th>
-                    <th align="center" scope="col">Casa</th>
-                    <th></th>
-                    @*<th width="20" height="20" scope="col"></th>*@
-                    <th align="center" scope="col">Resultado (H-D-A)</th>
-                    @*<th width="20" height="20" scope="col"></th>*@
-                    <th></th>
-                    <th align="center" scope="col">Fora</th>
-                    <th></th>
-                    <th scope="col">Data do Jogo</th>
-                    <th scope="col">Pontos</th>
-                </tr>
-            </thead>
-            <tbody>
-
-                @foreach (var item in Model)
-                {
-                    string urlimagehome = item.Idhometeam + ".png";
-                    string urlimageaway = item.Idawayteam + ".png";
-                    string idtxthome = "txtHome" + item.IdMatch;
-                    string idtxtaway = "txtaway" + item.IdMatch;
-                    string home = "Home";
-                    string draw = "Draw";
-                    string away = "Away";
-
-
+        <div class="table-responsive">
+            <table class="table table-sm table-hover">
+                <thead>
                     <tr>
-                        <th scope="row">@(jogo + 1)</th>
-                        <td></td>
-                        <td><img width="30" height="30" src="~/Images/@urlimagehome" /> @item.Hometeam</td>
-                        <td></td>
-                        <td>
-                            <div class="toggle-radio">
-                                @if (item.BetResult1 == "H")
-                                {
-                                    if (!(DateTime.Now > item.UtcDate))
-                                    {
-                                        <input width="60" type="radio" name="rbResult[@i]" id="rbWin[@i]" value="H" checked>
-                                    }
-                                    else
-                                    {
-                                        <input width="60" type="radio" value="H" checked disabled>
-                                    }
-                                }
-                                else
-                                {
-                                    if (!(DateTime.Now > item.UtcDate))
-                                    {
-                                        <input width="60" type="radio" name="rbResult[@i]" id="rbWin[@i]" value="H">
-                                    }
-                                    else
-                                    {
-                                        <input width="60" type="radio" value="H" disabled>
-                                    }
-                                }
-                                <label for="rbWin[@i]" style="width:60px">
-                                    @if (item.Oddshome != null)
-                                    {
-                                        @item.Oddshome
-                                    }
-                                    else
-                                    {
-                                        @home
-                                    }
-                                </label>
-                                @if (item.BetResult1 == "D")
-                                {
-                                    if (!(DateTime.Now > item.UtcDate))
-                                    {
-                                        <input type="radio" name="rbResult[@i]" id="rbDraw[@i]" value="D" checked>
-                                    }
-                                    else
-                                    {
-                                        <input type="radio" value="D" checked disabled>
-                                    }
-                                }
-                                else
-                                {
-                                    if (!(DateTime.Now > item.UtcDate))
-                                    {
-                                        <input type="radio" name="rbResult[@i]" id="rbDraw[@i]" value="D">
-                                    }
-                                    else
-                                    {
-                                        <input type="radio" value="D" disabled>
-                                    }
-                                }
-                                <label for="rbDraw[@i]" style="width:60px">
-                                    @if (item.Oddsdraw != null)
-                                    {
-                                        @item.Oddsdraw
-                                    }
-                                    else
-                                    {
-                                        @draw
-                                    }
-                                </label>
-                                @if (item.BetResult1 == "A")
-                                {
-                                    if (!(DateTime.Now > item.UtcDate))
-                                    {
-                                        <input width="60" type="radio" name="rbResult[@i]" id="rbLose[@i]" value="A" checked>
-                                    }
-                                    else
-                                    {
-                                        <input width="60" type="radio" value="A" checked disabled>
-                                    }
-                                }
-                                else
-                                {
-                                    if (!(DateTime.Now > item.UtcDate))
-                                    {
-                                        <input width="60" type="radio" name="rbResult[@i]" id="rbLose[@i]" value="A">
-                                    }
-                                    else
-                                    {
-                                        <input width="60" type="radio" value="A" disabled>
-                                    }
-                                }
-                                <label for="rbLose[@i]" style="width:60px">
-                                    @if (item.Oddsaway != null)
-                                    {
-                                        @item.Oddsaway
-                                    }
-                                    else
-                                    {
-                                        @away
-                                    }
-                                </label>
-                            </div>
-                        </td>
-                        <td></td>
-                        <td><img width="30" height="30" src="~/Images/@urlimageaway" /> @item.Awayteam</td>
-                        <td></td>
-                        <td>@item.UtcDate.ToString("g")</td>
-                        <td>
-                            @if (item.Score != null)
-                            {
-                                @item.Score
-                            }
-                            else
-                            {
-                                @nulo
-                            }
-                            @if (item.Perfect == 1)
-                            {
-                                <img width="25" height="25" src="~/Images/bullseye.png" />
-                            }
-                        </td>
+                        <th scope="col">#</th>
+                        <th></th>
+                        <th align="center" scope="col">Casa</th>
+                        <th></th>
+                        @*<th width="20" height="20" scope="col"></th>*@
+                        <th align="center" scope="col">Resultado (H-D-A)</th>
+                        @*<th width="20" height="20" scope="col"></th>*@
+                        <th></th>
+                        <th align="center" scope="col">Fora</th>
+                        <th></th>
+                        <th scope="col">Data do Jogo</th>
+                        <th scope="col">Pontos</th>
                     </tr>
-                    @if (!(DateTime.Now > item.UtcDate))
+                </thead>
+                <tbody>
+
+                    @foreach (var item in Model)
                     {
-                        <input name="idmatchAPI[@i]" type="hidden" value="@item.IdMatchAPI">
-                        <input name="utcdate[@i]" type="hidden" value="@item.UtcDate">
-                        <input name="matchday" type="hidden" value="@item.Matchday">
-                        i++;
+                        string urlimagehome = item.Idhometeam + ".png";
+                        string urlimageaway = item.Idawayteam + ".png";
+                        string idtxthome = "txtHome" + item.IdMatch;
+                        string idtxtaway = "txtaway" + item.IdMatch;
+                        string home = "Home";
+                        string draw = "Draw";
+                        string away = "Away";
+
+
+                        <tr>
+                            <th scope="row">@(jogo + 1)</th>
+                            <td></td>
+                            <td><img width="30" height="30" src="~/Images/@urlimagehome" /> @item.Hometeam</td>
+                            <td></td>
+                            <td>
+                                <div class="toggle-radio">
+                                    @if (item.BetResult1 == "H")
+                                    {
+                                        if (!(DateTime.Now > item.UtcDate))
+                                        {
+                                            <input width="60" type="radio" name="rbResult[@i]" id="rbWin[@i]" value="H" checked>
+                                        }
+                                        else
+                                        {
+                                            <input width="60" type="radio" value="H" checked disabled>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (!(DateTime.Now > item.UtcDate))
+                                        {
+                                            <input width="60" type="radio" name="rbResult[@i]" id="rbWin[@i]" value="H">
+                                        }
+                                        else
+                                        {
+                                            <input width="60" type="radio" value="H" disabled>
+                                        }
+                                    }
+                                    <label for="rbWin[@i]" style="width:60px">
+                                        @if (item.Oddshome != null)
+                                        {
+                                            @item.Oddshome
+                                        }
+                                        else
+                                        {
+                                            @home
+                                        }
+                                    </label>
+                                    @if (item.BetResult1 == "D")
+                                    {
+                                        if (!(DateTime.Now > item.UtcDate))
+                                        {
+                                            <input type="radio" name="rbResult[@i]" id="rbDraw[@i]" value="D" checked>
+                                        }
+                                        else
+                                        {
+                                            <input type="radio" value="D" checked disabled>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (!(DateTime.Now > item.UtcDate))
+                                        {
+                                            <input type="radio" name="rbResult[@i]" id="rbDraw[@i]" value="D">
+                                        }
+                                        else
+                                        {
+                                            <input type="radio" value="D" disabled>
+                                        }
+                                    }
+                                    <label for="rbDraw[@i]" style="width:60px">
+                                        @if (item.Oddsdraw != null)
+                                        {
+                                            @item.Oddsdraw
+                                        }
+                                        else
+                                        {
+                                            @draw
+                                        }
+                                    </label>
+                                    @if (item.BetResult1 == "A")
+                                    {
+                                        if (!(DateTime.Now > item.UtcDate))
+                                        {
+                                            <input width="60" type="radio" name="rbResult[@i]" id="rbLose[@i]" value="A" checked>
+                                        }
+                                        else
+                                        {
+                                            <input width="60" type="radio" value="A" checked disabled>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (!(DateTime.Now > item.UtcDate))
+                                        {
+                                            <input width="60" type="radio" name="rbResult[@i]" id="rbLose[@i]" value="A">
+                                        }
+                                        else
+                                        {
+                                            <input width="60" type="radio" value="A" disabled>
+                                        }
+                                    }
+                                    <label for="rbLose[@i]" style="width:60px">
+                                        @if (item.Oddsaway != null)
+                                        {
+                                            @item.Oddsaway
+                                        }
+                                        else
+                                        {
+                                            @away
+                                        }
+                                    </label>
+                                </div>
+                            </td>
+                            <td></td>
+                            <td><img width="30" height="30" src="~/Images/@urlimageaway" /> @item.Awayteam</td>
+                            <td></td>
+                            <td>@item.UtcDate.ToString("g")</td>
+                            <td>
+                                @if (item.Score != null)
+                                {
+                                    @item.Score
+                                }
+                                else
+                                {
+                                    @nulo
+                                }
+                                @if (item.Perfect == 1)
+                                {
+                                    <img width="25" height="25" src="~/Images/bullseye.png" />
+                                }
+                            </td>
+                        </tr>
+                        @if (!(DateTime.Now > item.UtcDate))
+                        {
+                            <input name="idmatchAPI[@i]" type="hidden" value="@item.IdMatchAPI">
+                            <input name="utcdate[@i]" type="hidden" value="@item.UtcDate">
+                            <input name="matchday" type="hidden" value="@item.Matchday">
+                            i++;
+                        }
+
+
+                        jogo++;
                     }
-
-
-                    jogo++;
-                }
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
+        <div class="row" style="float:right">Multiplicador da jornada - @Model.First().Multiplier</div>
+        <br />
+        <br />
         <div style="text-align:center" class="form-group">
             @if (!(ViewBag.JornadaFechada))
             {

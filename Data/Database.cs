@@ -52,6 +52,19 @@ namespace PenaltyV2.Data
 
             return qry;
         }
+        internal static IEnumerable<string> LoadUserLeagues(string username, ApplicationDbContext dbContext)
+        {
+            //Só para o caso de ser necessario mais tarde: IEnumerable<string> ligas = ((IEnumerable<string>)(from s in qry orderby s.Id select s.LeagueName));
+            try
+            {
+                List<string> userLeagues = Database.GetLeagues(username, dbContext);
+                return (IEnumerable<string>)userLeagues;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         internal static List<string> GetLeagues(string username, ApplicationDbContext dbContext)
         {
@@ -243,6 +256,7 @@ namespace PenaltyV2.Data
                        Oddsdraw = m2.Oddsdraw,
                        Oddshome = m2.Oddshome,
                        UtcDate = (DateTime)m2.UtcDate,
+                       Multiplier = m2.Multiplier,
                        Username = b2.Username,
                        GoalsAwayTeam = b2.GoalsAwayTeam,
                        GoalsHomeTeam = b2.GoalsHomeTeam,
@@ -476,6 +490,24 @@ namespace PenaltyV2.Data
             }
             return qry;
 
+        }
+
+        internal static Usersinfo GetUserInfo(string username, ApplicationDbContext dbContext)
+        {
+            Usersinfo qry = new Usersinfo();
+            List<String> userLeagues = new List<string>();
+            qry = (from u in dbContext.Usersinfo
+                   where u.Username == username
+                   select new Usersinfo
+                   { 
+                       Id = u.Id,
+                       Name = u.Name,
+                       Username = u.Username,
+                       Favoriteteam = u.Favoriteteam,
+                       Notifications = u.Notifications,
+                       Leagues = u.Leagues
+                   }).FirstOrDefault();
+            return qry;
         }
 
         public static string GetConnectionString()
