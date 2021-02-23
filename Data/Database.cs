@@ -92,25 +92,23 @@ namespace PenaltyV2.Data
             return qry;
         }
 
-        private static Dictionary<string, string> GetGlobalConstants(MySqlConnection connection)
+        private static string GetGlobalConstant(MySqlConnection connection, string constant)
         {
-            MySqlCommand globalConstantsCommand = new MySqlCommand("GetGlobalConstants", connection)
+            MySqlCommand globalConstantCommand = new MySqlCommand("GetGlobalConstants", connection)
             {
                 CommandType = CommandType.StoredProcedure
             };
-            MySqlDataReader globalConstantsReader = globalConstantsCommand.ExecuteReader();
+            MySqlDataReader globalConstantReader = globalConstantCommand.ExecuteReader();
 
-            Dictionary<string, string> globalConstants = new Dictionary<string, string>();
-            while (globalConstantsReader.Read())
+            while (globalConstantReader.Read())
             {
-                globalConstants.Add(
-                    globalConstantsReader["Constant"].ToString(),
-                    globalConstantsReader["Value"].ToString());
+                if (globalConstantReader["Constant"].ToString().Equals(constant))
+                {
+                    return globalConstantReader["Value"].ToString();
+                }
             }
 
-            globalConstantsReader.Close();
-
-            return globalConstants;
+            return null;
         }
 
         internal static void SubmitAutoBets(string username, Dictionary<int, int> teamHierarchy)
@@ -118,8 +116,7 @@ namespace PenaltyV2.Data
             MySqlConnection connection = new MySqlConnection(GetConnectionString());
             connection.Open();
 
-            Dictionary<string, string> globalConstants = GetGlobalConstants(connection);
-            string leagueId = globalConstants["LEAGUE_ID"];
+            string leagueId = GetGlobalConstant(connection, "LEAGUE_ID");
 
             MySqlCommand getAvailableFixturesForAutoBetsCommand = new MySqlCommand("GetAvailableFixturesForAutoBets", connection)
             {
