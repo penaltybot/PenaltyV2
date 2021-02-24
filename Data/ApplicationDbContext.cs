@@ -21,6 +21,8 @@ namespace PenaltyV2.Data
         public DbSet<Teams> Teams { get; set; }
         public DbSet<Leagues> Leagues { get; set; }
         public DbSet<LegacyScores> LegacyScores { get; set; }
+        public DbSet<TeamsStandings> TeamsStandings { get; set; }
+        public DbSet<UsersComulativeScores> UsersComulativeScores { get; set; }
     }
 
 }

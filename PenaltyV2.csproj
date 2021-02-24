@@ -6,6 +6,9 @@
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>.</DockerfileContext>
+    <PackageIcon>favicon.ico</PackageIcon>
+    <AssemblyVersion>1.0.1.7</AssemblyVersion>
+    <FileVersion>1.0.1.7</FileVersion>
   </PropertyGroup>
 
 
@@ -31,6 +34,14 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.4" />
     <PackageReference Include="Moment.js" Version="2.29.1" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.2.0" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <None Include="wwwroot\favicon.ico">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
