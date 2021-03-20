@@ -12,5 +12,6 @@ namespace PenaltyV2.Models
         public string Matchday { get; set; }
         public Nullable<decimal> Score { get; set; }
         public Nullable<int> CorrectPredictions { get; set; }
+        public string LeagueID { get; set; }
     }
 }

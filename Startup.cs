@@ -15,6 +15,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using PenaltyV2.Areas.Identity.Pages.Account;
 
 namespace PenaltyV2
 {
@@ -36,6 +38,7 @@ namespace PenaltyV2
                 options.CheckConsentNeeded = context => false;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+            services.AddTransient<IEmailSender, sendMail>();
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseMySql(

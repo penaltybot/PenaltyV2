@@ -12,6 +12,7 @@
       "commandName": "IISExpress",
       "launchBrowser": true,
       "environmentVariables": {
+        "EMAIL_PASSWORD": "penaltyTeam2016",
         "DB_USER": "root",
         "LANG": "pt_PT.UTF-8",
         "DB_DATABASE": "PenaltyV2",
@@ -20,6 +21,7 @@
         "DB_PASSWORD": "123pardal123",
         "LC_ALL": "pt_PT.UTF-8",
         "ASPNETCORE_ENVIRONMENT": "Development",
+        "FROM_EMAIL": "penaltyapp.bot@gmail.com",
         "LANGUAGE": "pt_PT:pt"
       }
     },

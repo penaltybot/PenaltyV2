@@ -30,6 +30,7 @@ namespace PenaltyV2.Data
         public static List<Userscores> GetUserscores(ApplicationDbContext dbContext, string league)
         {
             //TODO: Tenho de ir buscar o competition year
+            string league_id = GetGlobalConstant("LEAGUE_ID");
             List<Userscores> qry = new List<Userscores>();
             //Warning: Cuidado com o contains, se houver 2 ligas chamadas FCT e FCT2 por exemplo, quem tiver na FCT vai poder ver FCT2
             qry = (from us in dbContext.Userscores
@@ -105,8 +106,10 @@ namespace PenaltyV2.Data
             return qry;
         }
 
-        private static string GetGlobalConstant(MySqlConnection connection, string constant)
+        private static string GetGlobalConstant(string constant)
         {
+            MySqlConnection connection = new MySqlConnection(GetConnectionString());
+            connection.Open();
             MySqlCommand globalConstantCommand = new MySqlCommand("GetGlobalConstants", connection)
             {
                 CommandType = CommandType.StoredProcedure
@@ -120,7 +123,7 @@ namespace PenaltyV2.Data
                     return globalConstantReader["Value"].ToString();
                 }
             }
-
+            connection.Close();
             return null;
         }
 
@@ -129,7 +132,7 @@ namespace PenaltyV2.Data
             MySqlConnection connection = new MySqlConnection(GetConnectionString());
             connection.Open();
 
-            string leagueId = GetGlobalConstant(connection, "LEAGUE_ID");
+            string leagueId = GetGlobalConstant( "LEAGUE_ID");
 
             MySqlCommand getAvailableFixturesForAutoBetsCommand = new MySqlCommand("GetAvailableFixturesForAutoBets", connection)
             {
@@ -155,6 +158,7 @@ namespace PenaltyV2.Data
             }
 
             getAvailableFixturesForAutoBetsReader.Close();
+            connection.Close();
         }
 
         private static string ComputeAutoBet(Dictionary<int, int> teamHierarchy, int idhometeam, int idawayteam)

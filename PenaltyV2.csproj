@@ -7,8 +7,8 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>.</DockerfileContext>
     <PackageIcon>favicon.ico</PackageIcon>
-    <AssemblyVersion>1.0.1.7</AssemblyVersion>
-    <FileVersion>1.0.1.7</FileVersion>
+    <AssemblyVersion>1.0.1.8</AssemblyVersion>
+    <FileVersion>1.0.1.8</FileVersion>
   </PropertyGroup>
 
 
@@ -32,6 +32,7 @@
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.4" />
+    <PackageReference Include="MimeKit" Version="2.11.0" />
     <PackageReference Include="Moment.js" Version="2.29.1" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.2.0" />
   </ItemGroup>

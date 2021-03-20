@@ -30,13 +30,13 @@ namespace PenaltyV2.Areas.Identity.Pages.Account
             public string Email { get; set; }
 
             [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [StringLength(100, ErrorMessage = "A {0} tem de ter pelo menos {2} e um máximo {1} de caracteres.", MinimumLength = 6)]
             [DataType(DataType.Password)]
             public string Password { get; set; }
 
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            [Display(Name = "Confirma a password")]
+            [Compare("Password", ErrorMessage = "As passwords não são iguais.")]
             public string ConfirmPassword { get; set; }
 
             public string Code { get; set; }

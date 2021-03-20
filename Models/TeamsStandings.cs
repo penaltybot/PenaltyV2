@@ -17,5 +17,6 @@ namespace PenaltyV2.Models
         public Nullable<int> Losses { get; set; }
         public Nullable<int> GoalsFor { get; set; }
         public Nullable<int> GoalsAgainst { get; set; }
+        public string TeamID { get; set; }
     }
 }
