@@ -56,7 +56,7 @@ namespace PenaltyV2.Areas.Identity.Pages.Account
                 await _emailSender.SendEmailAsync(
                     Input.Email,
                     "Reset Password",
-                    $"Faz reset da tua password <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clica aqui</a>.");
+                    $"Para redefinir a tua password <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clica aqui</a>.");
 
                 return RedirectToPage("./ForgotPasswordConfirmation");
             }
