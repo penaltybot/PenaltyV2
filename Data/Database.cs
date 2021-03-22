@@ -31,24 +31,22 @@ namespace PenaltyV2.Data
         {
             //TODO: Tenho de ir buscar o competition year
             string league_id = GetGlobalConstant("LEAGUE_ID");
+            string acumulative_matchday = GetGlobalConstant("SECRET_MODE_START");
             List<Userscores> qry = new List<Userscores>();
             //Warning: Cuidado com o contains, se houver 2 ligas chamadas FCT e FCT2 por exemplo, quem tiver na FCT vai poder ver FCT2
-            qry = (from us in dbContext.Userscores
-                   where us.Competitionyear == "2020"
+            qry = (from ucs in dbContext.UsersCumulativeScores
+                   where ucs.LeagueID == league_id && ucs.Matchday == acumulative_matchday                   
                    join ui in dbContext.Usersinfo
-                   on us.Username equals ui.Username
+                   on ucs.Username equals ui.Username
                    where ui.Leagues.Contains(league)
-                   orderby us.Score descending
+                   orderby ucs.Score descending
                    select new Userscores
                    {
-                       Id = us.Id,
-                       Username = us.Username,
+                       Username = ucs.Username,
                        Name = ui.Name,
                        Favoriteteam = ui.Favoriteteam,
-                       Perfects = us.Perfects,
-                       Position = us.Position,
-                       Competitionyear = us.Competitionyear,
-                       Score = us.Score,
+                       Perfects = ucs.CorrectPredictions,                    
+                       Score = (decimal)ucs.Score
                    }).ToList();
 
             return qry;
@@ -441,7 +439,7 @@ namespace PenaltyV2.Data
             return matchLogs;
         }
 
-        internal static List<ScoresUserBets> GetScoresUserBets(int? matchday, string league, ApplicationDbContext dbContext)
+        internal static List<ScoresUserBets> GetScoresUserBets(int? matchday, string league, string username, ApplicationDbContext dbContext)
         {
             List<ScoresUserBets> qry = new List<ScoresUserBets>();
 
@@ -477,6 +475,8 @@ namespace PenaltyV2.Data
                               select b)
                            on ud2.Username equals b2.Username into bGroup
                             from b2 in bGroup.DefaultIfEmpty()
+                            orderby (ud2.Name) ascending
+                            orderby (b2.Username == username) descending                       
                             select new UsersBets
                             {
                                 Name = ud2.Name,

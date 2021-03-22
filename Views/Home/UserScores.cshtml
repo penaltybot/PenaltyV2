@@ -15,7 +15,7 @@
 
 
     <div class="table-responsive">
-        <table class="table table-bordered table-condensed table-striped table-hover sortable">
+        <table class="table table-bordered table-condensed table-hover sortable">
             @if (Model.Count() == 0)
             {
                 <tr>
@@ -26,18 +26,19 @@
             {
                 int i = 0;
                 <thead>
-                    <tr class="danger">
+                    <tr>
                         <th>Posição</th>
                         <th data-defaultsign="AZ">Nome</th>
                         <th data-defaultsign="AZ">Equipa</th>
                         <th data-firstsort="desc">Pontos</th>
-                        <th>Perfeitos</th>
+                        <th>Apostas Acertadas</th>
                     </tr>
                 </thead>
                 foreach (var item in Model)
                 {
                     i++;
-                    <tr>
+                    string rowclasse = item.Username.Equals(User.Identity.Name) ? "table-active" : "";
+                    <tr class="@rowclasse">
                         <td>@i</td>
                         <td>@item.Name</td>
                         <td>@item.Favoriteteam</td>

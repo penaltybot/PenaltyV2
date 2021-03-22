@@ -43,7 +43,15 @@ else
                 <th align="center" scope="col">Fora</th>
                 @foreach (var item in ViewBag.Usernames)
                 {
-                    <th style="border-bottom-style:solid">@item</th>
+                    if (ViewBag.Usernames[0] == item)
+                    {
+                        <th class="table-active" style="border-bottom-style:solid">@item</th>
+                    }
+                    else
+                    {
+                        <th style="border-bottom-style:solid">@item</th>
+                    }
+
 
                 }
             </tr>

@@ -259,13 +259,18 @@ namespace PenaltyV2.Controllers
             IEnumerable<string> ligas = ViewBag.Ligas;
             if (string.IsNullOrEmpty(league))
             {
-                league = ligas.First();
-                ViewBag.LigaSelecionada = league;
+                league = ligas.First();            
             }
             else
             {
-                ViewBag.LigaSelecionada = league;
+                //Se o nome da liga vier por query string, verifica-se se esse nome está na lista das ligas do utilizador  
+                if (!ligas.Contains(league))
+                {
+                    //Se não estiver "limpa-se" o nome da liga e provavelmente não se irá retornar nada da BD
+                    league = "Não pertences aqui!";
+                }
             }
+            ViewBag.LigaSelecionada = league;
 
             if (matchday == null)
             {
@@ -276,7 +281,7 @@ namespace PenaltyV2.Controllers
             List<Matches> qry = Database.GetMatches(_dbContext);
             ViewBag.MatchesDay = (from s in qry orderby s.Matchday select s.Matchday).Distinct();
 
-            List<ScoresUserBets> list2 = Database.GetScoresUserBets(matchday, league, _dbContext);
+            List<ScoresUserBets> list2 = Database.GetScoresUserBets(matchday, league,User.Identity.Name, _dbContext);
             if (list2.Count > 0)
             {
                 List<UsersBets> usersbets = list2.First().Userbets;

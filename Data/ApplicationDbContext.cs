@@ -13,7 +13,6 @@ namespace PenaltyV2.Data
             : base(options)
         {
         }
-        public DbSet<Userscores> Userscores { get; set; }
         public DbSet<Matches> Matches { get; set; }
         public DbSet<Bets> Bets { get; set; }
         public DbSet<Globalconstants> Globalconstants { get; set; }
@@ -22,7 +21,7 @@ namespace PenaltyV2.Data
         public DbSet<Leagues> Leagues { get; set; }
         public DbSet<LegacyScores> LegacyScores { get; set; }
         public DbSet<TeamsStandings> TeamsStandings { get; set; }
-        public DbSet<UsersComulativeScores> UsersComulativeScores { get; set; }
+        public DbSet<UsersCumulativeScores> UsersCumulativeScores { get; set; }
     }
 
 }
