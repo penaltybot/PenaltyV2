@@ -51,8 +51,6 @@ else
                     {
                         <th style="border-bottom-style:solid">@item</th>
                     }
-
-
                 }
             </tr>
         </thead>
@@ -62,13 +60,9 @@ else
             }
             @foreach (var item in Model)
             {
-
                 int j = 0;
-
                 string idtxthome = "txtHome" + item.IdMatchAPI;
                 string idtxtaway = "txtaway" + item.IdMatchAPI;
-
-
                 <tr>
                     <th scope="row">@(i + 1)</th>
 
@@ -99,7 +93,6 @@ else
                                     @item2.Score [@item2.Result]
                                 </td>
                             }
-
                         }
                         else
                         {
@@ -118,9 +111,7 @@ else
                         }
                         j++;
                     }
-
                 </tr>
-
                 i++;
             }
             <tr>
@@ -159,8 +150,8 @@ else
 }
 
 <script>
-    var someStringValue = '@(ViewBag.LigaSelecionada)';
+    var league_value = '@(ViewBag.LigaSelecionada)';
     function callChangefunc(val) {
-        window.location.href = "/Home/Summary?matchday=" + val + "&league=" + someStringValue;
+        window.location.href = "/Home/Summary?matchday=" + val + "&league=" + league_value;
     }
 </script>

@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using PenaltyV2.Data;
+
 namespace PenaltyV2.Areas.Identity.Pages.Account.Manage
 {
     public class ChangePasswordModel : PageModel
@@ -14,15 +16,18 @@ namespace PenaltyV2.Areas.Identity.Pages.Account.Manage
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<ChangePasswordModel> _logger;
+        private readonly ApplicationDbContext _dbContext;
 
         public ChangePasswordModel(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
-            ILogger<ChangePasswordModel> logger)
+            ILogger<ChangePasswordModel> logger,
+             ApplicationDbContext dbContext)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
+            _dbContext = dbContext;
         }
 
         [BindProperty]
@@ -57,7 +62,7 @@ namespace PenaltyV2.Areas.Identity.Pages.Account.Manage
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
-
+            ViewData["Ligas"] = Database.LoadUserLeagues(User.Identity.Name, _dbContext);
             var hasPassword = await _userManager.HasPasswordAsync(user);
             if (!hasPassword)
             {
@@ -92,7 +97,7 @@ namespace PenaltyV2.Areas.Identity.Pages.Account.Manage
 
             await _signInManager.RefreshSignInAsync(user);
             _logger.LogInformation("User changed their password successfully.");
-            StatusMessage = "Your password has been changed.";
+            StatusMessage = "Password alterada.";
 
             return RedirectToPage();
         }
