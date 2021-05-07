@@ -7,8 +7,8 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>.</DockerfileContext>
     <PackageIcon>favicon.ico</PackageIcon>
-    <AssemblyVersion>1.0.1.8</AssemblyVersion>
-    <FileVersion>1.0.1.8</FileVersion>
+    <AssemblyVersion>1.0.1.9</AssemblyVersion>
+    <FileVersion>1.0.1.9</FileVersion>
   </PropertyGroup>
 
 
