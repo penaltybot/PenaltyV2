@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.IO;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -42,6 +46,12 @@ namespace PenaltyV2.Areas.Identity.Pages.Account.Manage
         [TempData]
         public string StatusMessage { get; set; }
 
+        public Byte[] UserImg { get; set; }
+
+        public string Message { get; set; }
+
+        public bool IsValid { get; set; }
+
         [BindProperty]
         public InputModel Input { get; set; }
 
@@ -59,6 +69,10 @@ namespace PenaltyV2.Areas.Identity.Pages.Account.Manage
             [Required]
             [Display(Name = "Equipa Favorita")]
             public string FavoriteTeam { get; set; }
+            [NotMapped]
+            [Display(Name = "Personalizar Avatar")]
+            [AllowFileSize(FileSize = 1 * 1024 * 1024, ErrorMessage = "Máximo de ficheiros permitidos é 1 MB.")]
+            public IFormFile ImageFile { get; set; }
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -78,15 +92,17 @@ namespace PenaltyV2.Areas.Identity.Pages.Account.Manage
             var userName = await _userManager.GetUserNameAsync(user);
             var email = await _userManager.GetEmailAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-            var favoriteteam = Database.GetUserInfo(user.UserName, _dbContext).Favoriteteam;
 
+            Usersinfo usersinfo = Database.GetUserInfo(user.UserName, _dbContext);
+            //UserImg = File(usersinfo.UserImg, "image/png");
+            UserImg = usersinfo.UserImg;
             Username = userName;
 
             Input = new InputModel
             {
                 Email = email,
                 PhoneNumber = phoneNumber,
-                FavoriteTeam = favoriteteam
+                FavoriteTeam = usersinfo.Favoriteteam,            
             };
 
             IsEmailConfirmed = await _userManager.IsEmailConfirmedAsync(user);
@@ -96,48 +112,71 @@ namespace PenaltyV2.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
+            var user = await _userManager.GetUserAsync(User);
+            var email = await _userManager.GetEmailAsync(user);
+            var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+
+            if (ModelState.IsValid)
             {
+
+
+                if (user == null)
+                {
+                    return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                }               
+                if (Input.Email != email)
+                {
+                    var setEmailResult = await _userManager.SetEmailAsync(user, Input.Email);
+                    if (!setEmailResult.Succeeded)
+                    {
+                        var userId = await _userManager.GetUserIdAsync(user);
+                        throw new InvalidOperationException($"Unexpected error occurred setting email for user with ID '{userId}'.");
+                    }
+                }           
+                if (Input.PhoneNumber != phoneNumber)
+                {
+                    var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
+                    if (!setPhoneResult.Succeeded)
+                    {
+                        var userId = await _userManager.GetUserIdAsync(user);
+                        throw new InvalidOperationException($"Unexpected error occurred setting phone number for user with ID '{userId}'.");
+                    }
+                }
+
+                Byte[] fileBytes = null;
+                if (Input.ImageFile != null)
+                {
+                    if (Input.ImageFile.Length > 0)
+                    {
+                        IFormFile files = Input.ImageFile;
+                        using (var target = new MemoryStream())
+                        {
+                            files.CopyTo(target);
+                            fileBytes = target.ToArray();
+                        }
+
+                    }
+                }
+
+
+                //Alterar dados tabela Usersinfo
+                UpdateUserInfo(new Usersinfo
+                {
+                    Username = user.UserName,
+                    Favoriteteam = Input.FavoriteTeam,
+                    UserImg = fileBytes
+                });
+
+                await _signInManager.RefreshSignInAsync(user);
+                StatusMessage = "O teu perfil foi atualizado!";
+            }else
+            {
+
+                await OnGetAsync();
                 return Page();
             }
 
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
-
-            var email = await _userManager.GetEmailAsync(user);
-            if (Input.Email != email)
-            {
-                var setEmailResult = await _userManager.SetEmailAsync(user, Input.Email);
-                if (!setEmailResult.Succeeded)
-                {
-                    var userId = await _userManager.GetUserIdAsync(user);
-                    throw new InvalidOperationException($"Unexpected error occurred setting email for user with ID '{userId}'.");
-                }
-            }
-
-            var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-            if (Input.PhoneNumber != phoneNumber)
-            {
-                var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
-                if (!setPhoneResult.Succeeded)
-                {
-                    var userId = await _userManager.GetUserIdAsync(user);
-                    throw new InvalidOperationException($"Unexpected error occurred setting phone number for user with ID '{userId}'.");
-                }
-            }
-
-            //Alterar dados tabela Usersinfo
-            UpdateUserInfo(new Usersinfo
-            {
-                Username = user.UserName,
-                Favoriteteam = Input.FavoriteTeam,
-            });
-
-            await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "O teu perfil foi atualizado!";
+            
             return RedirectToPage();
         }
 
@@ -179,6 +218,11 @@ namespace PenaltyV2.Areas.Identity.Pages.Account.Manage
                 userinfo.Favoriteteam = userupdatedinfo.Favoriteteam;
             }
 
+            if(userupdatedinfo.UserImg != null)
+            {
+                userinfo.UserImg = userupdatedinfo.UserImg;
+            }
+           
             _dbContext.Update(userinfo);
             _dbContext.SaveChanges();
 

@@ -46,7 +46,8 @@ namespace PenaltyV2.Data
                        Name = ui.Name,
                        Favoriteteam = ui.Favoriteteam,
                        Perfects = ucs.CorrectPredictions,                    
-                       Score = (decimal)ucs.Score
+                       Score = (decimal)ucs.Score,
+                       UserImg = ui.UserImg
                    }).ToList();
 
             return qry;
@@ -509,7 +510,8 @@ namespace PenaltyV2.Data
                        Username = u.Username,
                        Favoriteteam = u.Favoriteteam,
                        Notifications = u.Notifications,
-                       Leagues = u.Leagues
+                       Leagues = u.Leagues,
+                       UserImg = u.UserImg
                    }).FirstOrDefault();
             return qry;
         }

@@ -14,5 +14,6 @@ namespace PenaltyV2.Models
         public decimal Score { get; set; }
         public Nullable<int> Perfects { get; set; }
         public string Competitionyear { get; set; }
+        public byte[] UserImg { get; set; }
     }
 }

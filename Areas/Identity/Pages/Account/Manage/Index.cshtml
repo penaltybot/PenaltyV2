@@ -9,7 +9,7 @@
 <partial name="_StatusMessage" for="StatusMessage" />
 <div class="row">
     <div class="col-md-6">
-        <form id="profile-form" method="post">
+        <form id="profile-form" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Username"></label>
@@ -37,12 +37,28 @@
                     <option value="">-- Selecione Equipa --</option>
                 </select>
             </div>
+
+            <div class="form-group">
+                <label asp-for="Input.ImageFile"></label>
+                <input asp-for="Input.ImageFile" accept="image/*" />
+            </div>
+            @if (Model.UserImg != null)
+            {
+                <div class="img-fluid" style="padding-bottom:20px;"><img src="data:image/png;base64,@Convert.ToBase64String(Model.UserImg)" style="width:100px;height:100px" /></div>
+            }
+            else
+            {
+                <div class="img-fluid" style="padding-bottom:20px;"><img src="~/Images/defaultuser.png" style="width:100px;height:100px" /></div>
+            }
+
+
             @*<div class="form-group">
             <label asp-for="Input.PhoneNumber"></label>
             <input asp-for="Input.PhoneNumber" class="form-control" />
             <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
         </div>*@
             <button id="update-profile-button" type="submit" class="btn btn-primary">Guardar</button>
+
         </form>
     </div>
 </div>

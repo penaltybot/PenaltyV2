@@ -13,5 +13,6 @@ namespace PenaltyV2.Models
         public string Leagues { get; set; }
         public string Favoriteteam { get; set; }
         public int Notifications { get; set; }
+        public byte[] UserImg { get; set; }
     }
 }
