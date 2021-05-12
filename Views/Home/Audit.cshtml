@@ -1,7 +1,9 @@
 ﻿@{
     Layout = null;
 }
-@foreach (var auditLog in ViewBag.AuditLogs)
-{
-    <p>@auditLog</p>
-}
+<div>
+    @foreach (var auditLog in ViewBag.AuditLogs)
+    {
+        @auditLog<br>
+    }
+</div>

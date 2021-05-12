@@ -35,7 +35,7 @@ namespace PenaltyV2.Data
             List<Userscores> qry = new List<Userscores>();
             //Warning: Cuidado com o contains, se houver 2 ligas chamadas FCT e FCT2 por exemplo, quem tiver na FCT vai poder ver FCT2
             qry = (from ucs in dbContext.UsersCumulativeScores
-                   where ucs.LeagueID == league_id && ucs.Matchday == acumulative_matchday                   
+                   where ucs.LeagueID == league_id && ucs.Matchday == acumulative_matchday
                    join ui in dbContext.Usersinfo
                    on ucs.Username equals ui.Username
                    where ui.Leagues.Contains(league)
@@ -45,7 +45,7 @@ namespace PenaltyV2.Data
                        Username = ucs.Username,
                        Name = ui.Name,
                        Favoriteteam = ui.Favoriteteam,
-                       Perfects = ucs.CorrectPredictions,                    
+                       Perfects = ucs.CorrectPredictions,
                        Score = (decimal)ucs.Score,
                        UserImg = ui.UserImg
                    }).ToList();
@@ -131,7 +131,7 @@ namespace PenaltyV2.Data
             MySqlConnection connection = new MySqlConnection(GetConnectionString());
             connection.Open();
 
-            string leagueId = GetGlobalConstant( "LEAGUE_ID");
+            string leagueId = GetGlobalConstant("LEAGUE_ID");
 
             MySqlCommand getAvailableFixturesForAutoBetsCommand = new MySqlCommand("GetAvailableFixturesForAutoBets", connection)
             {
@@ -477,7 +477,7 @@ namespace PenaltyV2.Data
                            on ud2.Username equals b2.Username into bGroup
                             from b2 in bGroup.DefaultIfEmpty()
                             orderby (ud2.Name) ascending
-                            orderby (b2.Username == username) descending                       
+                            orderby (b2.Username == username) descending
                             select new UsersBets
                             {
                                 Name = ud2.Name,
@@ -504,7 +504,7 @@ namespace PenaltyV2.Data
             qry = (from u in dbContext.Usersinfo
                    where u.Username == username
                    select new Usersinfo
-                   { 
+                   {
                        Id = u.Id,
                        Name = u.Name,
                        Username = u.Username,

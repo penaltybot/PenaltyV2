@@ -41,7 +41,7 @@ namespace PenaltyV2.Controllers
             {
                 ViewData["Ligas"] = Database.LoadUserLeagues(User.Identity.Name, _dbContext);
             }
-                    
+
         }
 
         public IActionResult Index()
@@ -94,7 +94,7 @@ namespace PenaltyV2.Controllers
         {
             List<string> auditLogs = new List<string>
             {
-                Database.GetMd5(IdmatchAPI)
+                "MD5 Hash: " + Database.GetMd5(IdmatchAPI)
             };
 
             var auditFields = Database.GetMatchDetails(IdmatchAPI);
@@ -102,7 +102,7 @@ namespace PenaltyV2.Controllers
             if (DateTime.Now > auditFields.UtcDate && !auditFields.Secret)
             {
                 auditLogs.Add("");
-                auditLogs.Add("");
+                auditLogs.Add("ID,Username,IdmatchAPI,Result;");
                 auditLogs.AddRange(Database.GetMatchBets(IdmatchAPI));
             }
 
@@ -259,7 +259,7 @@ namespace PenaltyV2.Controllers
             IEnumerable<string> ligas = ViewBag.Ligas;
             if (string.IsNullOrEmpty(league))
             {
-                league = ligas.First();            
+                league = ligas.First();
             }
             else
             {
@@ -281,7 +281,7 @@ namespace PenaltyV2.Controllers
             List<Matches> qry = Database.GetMatches(_dbContext);
             ViewBag.MatchesDay = (from s in qry orderby s.Matchday select s.Matchday).Distinct();
 
-            List<ScoresUserBets> list2 = Database.GetScoresUserBets(matchday, league,User.Identity.Name, _dbContext);
+            List<ScoresUserBets> list2 = Database.GetScoresUserBets(matchday, league, User.Identity.Name, _dbContext);
             if (list2.Count > 0)
             {
                 List<UsersBets> usersbets = list2.First().Userbets;
