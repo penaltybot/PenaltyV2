@@ -189,6 +189,38 @@ namespace PenaltyV2.Data
             }
         }
 
+        public static List<Teams> GetSeasonTeams()
+        {
+            MySqlConnection connection = new MySqlConnection(GetConnectionString());
+            connection.Open();
+
+            string leagueId = GetGlobalConstant("LEAGUE_ID");
+
+            MySqlCommand getSeasonTeamsCommand = new MySqlCommand("GetSeasonTeams", connection)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+            getSeasonTeamsCommand.Parameters.Add(new MySqlParameter("LeagueID", leagueId));
+
+            MySqlDataReader getSeasonTeamsReader = getSeasonTeamsCommand.ExecuteReader();
+            List<Teams> teams = new List<Teams>();
+            while (getSeasonTeamsReader.Read())
+            {
+                teams.Add(new Teams()
+                {
+                    TeamId = getSeasonTeamsReader.GetString("TeamId"),
+                    Name = getSeasonTeamsReader.GetString("Name"),
+                    LogoUri = getSeasonTeamsReader.GetString("LogoUri")
+                });
+
+            }
+
+            getSeasonTeamsReader.Close();
+            connection.Close();
+
+            return teams;
+        }
+
         public static List<Matches> GetMatches(ApplicationDbContext dbContext)
         {
             List<Matches> qry = new List<Matches>();

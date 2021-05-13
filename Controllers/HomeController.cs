@@ -61,31 +61,33 @@ namespace PenaltyV2.Controllers
 
         public IActionResult SubmitAutoBets()
         {
-            Dictionary<int, int> teamHierarchy = new Dictionary<int, int>()
-            {
-                { 242, 1 },
-                { 211, 2 },
-                { 225, 3 },
-                { 222, 4 },
-                { 227, 5 },
-                { 214, 6 },
-                { 224, 7 },
-                { 221, 8 },
-                { 215, 9 },
-                { 231, 10 },
-                { 212, 11 },
-                { 217, 12 },
-                { 216, 13 },
-                { 234, 14 },
-                { 228, 15 },
-                { 762, 16 },
-                { 218, 17 },
-                { 226, 18 }
-            };
+            ViewBag.Teams = Database.GetSeasonTeams();
 
-            string username = "tbento";
+            //Dictionary<int, int> teamHierarchy = new Dictionary<int, int>()
+            //{
+            //    { 242, 1 },
+            //    { 211, 2 },
+            //    { 225, 3 },
+            //    { 222, 4 },
+            //    { 227, 5 },
+            //    { 214, 6 },
+            //    { 224, 7 },
+            //    { 221, 8 },
+            //    { 215, 9 },
+            //    { 231, 10 },
+            //    { 212, 11 },
+            //    { 217, 12 },
+            //    { 216, 13 },
+            //    { 234, 14 },
+            //    { 228, 15 },
+            //    { 762, 16 },
+            //    { 218, 17 },
+            //    { 226, 18 }
+            //};
 
-            Database.SubmitAutoBets(username, teamHierarchy);
+            //string username = "tbento";
+
+            //Database.SubmitAutoBets(username, teamHierarchy);
 
             return View();
         }

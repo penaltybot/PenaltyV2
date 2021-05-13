@@ -3,5 +3,41 @@
     ViewData["Title"] = "SubmitAutoBets";
 }
 
-<h1>SubmitAutoBets</h1>
+<h1>Apostas Automáticas</h1>
 
+<div class="table-responsive">
+    <table id="teams" class="table table-sm table-hover">
+        <thead>
+            <tr>
+                <th>Posição</th>
+                <th>Equipa</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{ var i = 0; }
+
+            @foreach (var item in ViewBag.Teams)
+            {
+                i++;
+
+                <tr id="@item.TeamId">
+                    <td>@i</td>
+                    <td><img width="25" height="25" src="@item.LogoUri" /></td>
+                    <td></td>
+                    <td>@item.Name</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script src="https://code.jquery.com/jquery-1.12.4.js" integrity="sha256-Qw82+bXyGq6MydymqBxNPYTaUXXq7c8v3CwiYwLLNXU=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/TableDnD/0.9.1/jquery.tablednd.js" integrity="sha256-d3rtug+Hg1GZPB7Y/yTcRixO/wlI78+2m08tosoRn7A=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+    jQuery(document).ready(function ($) {
+        // Initialise the table
+        $("#teams").tableDnD();
+    });
+</script>
