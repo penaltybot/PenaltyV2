@@ -31,6 +31,7 @@ namespace PenaltyV2.Controllers
             ViewBag.Message = "Jornada: " + matchday.ToString();
             ViewBag.JornadaAnt = matchday - 1;
             ViewBag.JornadaSeg = matchday + 1;
+            ViewBag.UltimaJornada = Database.GetLastMatchDay(_dbContext);
         }
 
 
@@ -59,6 +60,7 @@ namespace PenaltyV2.Controllers
             return View();
         }
 
+        [Authorize]
         public IActionResult SubmitAutoBets()
         {
             ViewBag.Teams = Database.GetSeasonTeams();
@@ -152,6 +154,7 @@ namespace PenaltyV2.Controllers
 
             List<Userscores> userscores = Database.GetUserscores(_dbContext, league);
             ViewBag.LigaSelecionada = league;
+            ViewBag.JornadaSecreta = Convert.ToInt32(Database.GetGlobalConstant("SECRET_MODE_START")); 
             return View(userscores);
         }
 
@@ -161,6 +164,14 @@ namespace PenaltyV2.Controllers
             if (matchday == null)
             {
                 matchday = Database.GetCurrentMatchDay(_dbContext);
+            }
+            else if (matchday < 1)
+            {
+                matchday = 1;
+            }
+            else if (matchday > Database.GetLastMatchDay(_dbContext))
+            {
+                matchday = Database.GetLastMatchDay(_dbContext);
             }
             MatchdayViewbags((int)matchday);
 
@@ -183,6 +194,14 @@ namespace PenaltyV2.Controllers
             if (matchday == null)
             {
                 matchday = Database.GetCurrentMatchDay(_dbContext);
+            }
+            else if (matchday < 1)
+            {
+                matchday = 1;
+            }
+            else if (matchday > Database.GetLastMatchDay(_dbContext))
+            {
+                matchday = Database.GetLastMatchDay(_dbContext);
             }
             MatchdayViewbags((int)matchday);
 
@@ -259,6 +278,10 @@ namespace PenaltyV2.Controllers
         public ActionResult Summary(int? matchday, string league)
         {
             IEnumerable<string> ligas = ViewBag.Ligas;
+            int secret_mode = Convert.ToInt32(Database.GetGlobalConstant("SECRET_MODE_START"));
+
+
+
             if (string.IsNullOrEmpty(league))
             {
                 league = ligas.First();
@@ -277,8 +300,17 @@ namespace PenaltyV2.Controllers
             if (matchday == null)
             {
                 matchday = Database.GetCurrentMatchDay(_dbContext);
+            }else if(matchday < 1)
+            {
+                matchday = 1;
+            }
+            else if (matchday > Database.GetLastMatchDay(_dbContext))
+            {
+                matchday = Database.GetLastMatchDay(_dbContext);
             }
             MatchdayViewbags((int)matchday);
+
+
 
             List<Matches> qry = Database.GetMatches(_dbContext);
             ViewBag.MatchesDay = (from s in qry orderby s.Matchday select s.Matchday).Distinct();
@@ -295,9 +327,16 @@ namespace PenaltyV2.Controllers
                 ViewBag.Usernames = usernames;
             }
 
-
-            return View(list2);
-
+            //Verificar se não está numa jornada em Segredo
+            if (matchday >= secret_mode)
+            {
+                ViewBag.SecretMode = true;
+                return View();
+            }else
+            {
+                ViewBag.SecretMode = false;
+                return View(list2);
+            }      
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

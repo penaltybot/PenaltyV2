@@ -105,7 +105,7 @@ namespace PenaltyV2.Data
             return qry;
         }
 
-        private static string GetGlobalConstant(string constant)
+        public static string GetGlobalConstant(string constant)
         {
             MySqlConnection connection = new MySqlConnection(GetConnectionString());
             connection.Open();
@@ -250,6 +250,20 @@ namespace PenaltyV2.Data
             qry = (from m in dbContext.Matches
                    where m.UtcDate > DateTime.Today
                    orderby m.UtcDate
+                   select new Matches
+                   {
+                       Matchday = m.Matchday
+                   }).ToList();
+            Matches match = qry.First();
+
+            return (int)match.Matchday;
+        }
+
+        public static int GetLastMatchDay(ApplicationDbContext dbContext)
+        {
+            List<Matches> qry = new List<Matches>();
+            qry = (from m in dbContext.Matches 
+                   orderby m.Matchday descending
                    select new Matches
                    {
                        Matchday = m.Matchday

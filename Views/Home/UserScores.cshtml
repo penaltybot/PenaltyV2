@@ -40,13 +40,13 @@
                     <td>
                         @if (item.UserImg != null)
                         {
-                            <span class="img-fluid" ><img class="thumbnail" src="data:image/png;base64,@Convert.ToBase64String(item.UserImg)"/> @item.Name</span>
+                            <span class="img-fluid"><img class="thumbnail" src="data:image/png;base64,@Convert.ToBase64String(item.UserImg)" /> @item.Name</span>
                         }
                         else
                         {
-                            <span class="img-fluid" ><img class="thumbnail" src="~/Images/defaultuser.png" style="width:20px;height:20px" /> @item.Name</span>
+                            <span class="img-fluid"><img class="thumbnail" src="~/Images/defaultuser.png" style="width:20px;height:20px" /> @item.Name</span>
                         }
-                        
+
                     </td>
                     <td>@item.Favoriteteam</td>
                     <td>@item.Score</td>
@@ -56,6 +56,7 @@
         }
     </table>
 </div>
+<div class="row" style="float:right">P.S.: Pontuações até à jornada secreta (@ViewBag.JornadaSecreta).</div>
 <script>
     function callChangefunc(val) {
         window.location.href = "/Home/UserScores?league=" + val;

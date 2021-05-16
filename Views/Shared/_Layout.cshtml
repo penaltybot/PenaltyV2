@@ -37,44 +37,51 @@
                             <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         @*<li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="UserScores">Pontuação</a>
-                        </li>*@
+                    <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="UserScores">Pontuação</a>
+                </li>*@
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="TeamMatches">Primeira Liga</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="UserBets">Apostas</a>
-                        </li>
-                        @*<li class="nav-item">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Apostas
+                            </a>
+                            <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
+
+                                <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="UserBets">Manuais</a>
+                                <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="SubmitAutoBets">Automaticas</a>
+
+                            </div>
+                @*<li class="nav-item">
             <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Summary">Sumário</a>
         </li>*@
-                        @if (ViewData["Ligas"] != null)
-                        {
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Sumário
-                                </a>
-                                <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
-                                    @foreach (var item in (IEnumerable<string>)ViewData["Ligas"])
-                                    {
-                                        <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Summary" asp-route-league="@item">@item</a>
-                                    }
-                                </div>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Pontuação
-                                </a>
-                                <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
-                                    @foreach (var item in (IEnumerable<string>)ViewData["Ligas"])
-                                    {
-                                        <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="UserScores" asp-route-league="@item">@item</a>
-                                    }
-                                </div>
-                            </li>
-                        }
-                    </ul>
-                </div>
+                @if (ViewData["Ligas"] != null)
+                {
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Sumário
+                        </a>
+                        <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
+                            @foreach (var item in (IEnumerable<string>)ViewData["Ligas"])
+                            {
+                                <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Summary" asp-route-league="@item">@item</a>
+                            }
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Pontuação
+                        </a>
+                        <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
+                            @foreach (var item in (IEnumerable<string>)ViewData["Ligas"])
+                            {
+                                <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="UserScores" asp-route-league="@item">@item</a>
+                            }
+                        </div>
+                    </li>
+                }
+                </ul>
+            </div>
             </div>
         </nav>
     </header>

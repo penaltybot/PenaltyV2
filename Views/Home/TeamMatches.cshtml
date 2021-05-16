@@ -28,9 +28,15 @@ else
 
     <div class="d-flex justify-content-center">
         <h3>
-            <a href="/Home/TeamMatches?matchday=@ViewBag.JornadaAnt"><i class="fa fa-arrow-left"></i></a>&nbsp;
-            <b>@ViewBag.Message</b>
-            &nbsp;<a href="/Home/TeamMatches?matchday=@ViewBag.JornadaSeg"><i class="fa fa-arrow-right"></i></a>
+            @if (ViewBag.JornadaAnt > 0)
+            {
+                <a href="/Home/TeamMatches?matchday=@ViewBag.JornadaAnt"><i class="fa fa-arrow-left"></i></a>
+            }
+            &nbsp;<b>@ViewBag.Message</b>&nbsp;
+            @if (ViewBag.JornadaSeg <= ViewBag.UltimaJornada)
+            {
+                <a href="/Home/TeamMatches?matchday=@ViewBag.JornadaSeg"><i class="fa fa-arrow-right"></i></a>
+            }
         </h3>
     </div>
 
@@ -90,11 +96,11 @@ else
                 }
             </tbody>
         </table>
-        </div>
-        }
+    </div>
+}
 
-        <script>
-            function callChangefunc(val) {
-                window.location.href = "/Home/TeamMatches?matchday=" + val;
-            }
-        </script>
+<script>
+    function callChangefunc(val) {
+        window.location.href = "/Home/TeamMatches?matchday=" + val;
+    }
+</script>
