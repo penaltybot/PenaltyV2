@@ -254,6 +254,11 @@ namespace PenaltyV2.Data
                    {
                        Matchday = m.Matchday
                    }).ToList();
+            //Quando ja nao ha jornadas
+            if(qry.Count == 0)
+            {
+                return 1;
+            }
             Matches match = qry.First();
 
             return (int)match.Matchday;

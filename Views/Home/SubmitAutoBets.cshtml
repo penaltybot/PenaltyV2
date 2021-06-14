@@ -5,34 +5,62 @@
 
 <h3>@ViewBag.Title</h3>
 
-<div class="table-responsive">
-    <table id="teams" class="table table-sm table-hover">
-        <thead>
-            <tr>
-                <th>Posição</th>
-                <th>Equipa</th>
-                <th></th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @{ var i = 0; }
+<form method="post" action="/Home/SubmitAutoBets">
+    <div class="row">
+        <div class="col-md-2">
+            <div class="table-responsive">
+                <table class="table table-sm table">
+                    <thead>
+                        <tr>
+                            <th>Posição</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{var j = 1; }
+                        @foreach (var item in ViewBag.Teams)
+                        {
 
-            @foreach (var item in ViewBag.Teams)
-            {
-                i++;
+                            <tr>
+                                <td>@(j)</td>
+                            </tr>
+                            j++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="table-responsive">
+                <table id="teams" class="table table-sm table-hover">
+                    <thead>
+                        <tr>
+                            <th>Equipa</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{ var i = 0; }
 
-                <tr id="@item.TeamId">
-                    <td>@i</td>
-                    <td><img width="25" height="25" src="@item.LogoUri" /></td>
-                    <td></td>
-                    <td>@item.Name</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
-
+                        @foreach (var item in ViewBag.Teams)
+                        {
+                            <tr id="@item.TeamId">
+                                <td><img width="18" height="18" src="@item.LogoUri" /></td>
+                                <td></td>
+                                <td>@item.Name</td>
+                                <td> <input name="idTeam" type="hidden" value="@item.TeamId"></td>
+                            </tr>
+                            i++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div style="text-align:center" class="form-group">
+                <input type="submit" value="Introduzir Apostas" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+</form>
 <script src="https://code.jquery.com/jquery-1.12.4.js" integrity="sha256-Qw82+bXyGq6MydymqBxNPYTaUXXq7c8v3CwiYwLLNXU=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/TableDnD/0.9.1/jquery.tablednd.js" integrity="sha256-d3rtug+Hg1GZPB7Y/yTcRixO/wlI78+2m08tosoRn7A=" crossorigin="anonymous"></script>
 <script type="text/javascript">
@@ -40,4 +68,6 @@
         // Initialise the table
         $("#teams").tableDnD();
     });
+
+
 </script>

@@ -94,6 +94,23 @@ namespace PenaltyV2.Controllers
             return View();
         }
 
+        [Authorize]
+        [HttpPost]
+        public IActionResult SubmitAutoBets(int[] idTeam)
+        {
+            Dictionary<int, int> teamHierarchy = new Dictionary<int, int>();
+            for (int i = 0; i < idTeam.Length; i++)
+            {
+                teamHierarchy.Add(idTeam[i], i+1 );
+            }
+
+            Database.SubmitAutoBets(User.Identity.Name, teamHierarchy);
+
+            ViewBag.Teams = Database.GetSeasonTeams();
+
+            return View();
+        }
+
         public IActionResult Audit(string IdmatchAPI)
         {
             List<string> auditLogs = new List<string>
