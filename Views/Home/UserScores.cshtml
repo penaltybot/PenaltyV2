@@ -7,9 +7,6 @@
     <div class="col-md-10">
         <h2>Liga: @ViewBag.LigaSelecionada  </h2>
     </div>
-    @*<div class="col-md-2" style="padding-top:5px">
-            @Html.DropDownList("ddliga", new SelectList(ViewBag.Ligas), "Selecione Liga", new { @onchange = "callChangefunc(this.value)" })
-        </div>*@
 </div>
 <div class="table-responsive">
     <table class="table table-bordered table-condensed table-hover sortable">
@@ -60,14 +57,5 @@
 <script>
     function callChangefunc(val) {
         window.location.href = "/Home/UserScores?league=" + val;
-    }
-    function bigImg(x) {
-        x.style.height = "64px";
-        x.style.width = "64px";
-    }
-
-    function normalImg(x) {
-        x.style.height = "32px";
-        x.style.width = "32px";
     }
 </script>

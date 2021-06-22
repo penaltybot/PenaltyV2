@@ -244,6 +244,41 @@ namespace PenaltyV2.Data
             return qry;
         }
 
+        public static List<TStands> GetTeamsStandings(ApplicationDbContext dbContext)
+        {
+            List<TStands> qry = new List<TStands>();
+
+            qry = (from ts in dbContext.TeamsStandings
+                   orderby ts.Rank
+                   join t in dbContext.Teams
+                   on ts.TeamID equals t.TeamId
+                   select new TStands
+                   {
+                       Team = new Teams 
+                       { 
+                           Id = t.Id,
+                           Name = t.Name,
+                           LogoUri = t.LogoUri,
+                           TeamId = t.TeamId                           
+                       },
+                       Stand = new TeamsStandings
+                       {
+                           Id = ts.Id,
+                           Rank = ts.Rank,
+                           Points = ts.Points,
+                           TeamID = ts.TeamID,
+                           MatchesPlayed = ts.MatchesPlayed,
+                           Wins = ts.Wins,
+                           Draws = ts.Draws,
+                           Losses = ts.Losses,
+                           GoalsFor = ts.GoalsFor,
+                           GoalsAgainst = ts.GoalsAgainst,
+                           Form = ts.Form
+                       }
+                   }).ToList();
+            return qry;
+        }
+
         public static int GetCurrentMatchDay(ApplicationDbContext dbContext)
         {
             List<Matches> qry = new List<Matches>();

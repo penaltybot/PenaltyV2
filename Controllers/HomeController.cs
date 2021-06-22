@@ -206,6 +206,13 @@ namespace PenaltyV2.Controllers
         }
 
         [Authorize]
+        public ActionResult TeamStandings()
+        {
+            List<TStands> stands = Database.GetTeamsStandings(_dbContext);
+            return View(stands); 
+        }
+
+        [Authorize]
         public ActionResult UserBets(int? matchday)
         {
             if (matchday == null)
