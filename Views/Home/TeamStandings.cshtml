@@ -28,19 +28,33 @@
             foreach (var item in Model)
             {
                 i++;
-                <tr>
-                    <td>@i</td>
-                    <td>
-                        <span class="img-fluid"><img class="thumbnail" src="@item.Team.LogoUri" style="width:20px;height:20px" /> @item.Team.Name</span>
-                    </td>
-                    <td>@item.Stand.Points</td>
-                    <td>@item.Stand.MatchesPlayed</td>
-                    <td>@item.Stand.Wins</td>
-                    <td>@item.Stand.Draws</td>
-                    <td>@item.Stand.Losses</td>
-                </tr>
-            }
+                int numEquipas = Model.Count();
+                string classe = "";
+                switch(i)
+                {
+                    case 1: classe = "table-primary"; break;
+                    case 2: classe = "table-info"; break;
+                    case 3: classe = "table-info"; break;
+                    case 16: classe = "table-warning"; break;
+                    case 17: classe = "table-danger"; break;
+                    case 18: classe = "table-danger";break;
+                    default:
+                        break;
+                }
+
+            <tr class="@classe">
+                <td>@i</td>
+                <td>
+                    <span class="img-fluid"><img class="thumbnail" src="@item.Team.LogoUri" style="width:20px;height:20px" /> @item.Team.Name</span>
+                </td>
+                <td>@item.Stand.Points</td>
+                <td>@item.Stand.MatchesPlayed</td>
+                <td>@item.Stand.Wins</td>
+                <td>@item.Stand.Draws</td>
+                <td>@item.Stand.Losses</td>
+            </tr>
         }
-    </table>
-</div>
+        }
+</ table >
+</ div >
 

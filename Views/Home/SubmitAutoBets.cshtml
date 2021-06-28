@@ -7,30 +7,8 @@
 
 <form method="post" action="/Home/SubmitAutoBets">
     <div class="row">
-        <div class="col-md-2">
-            <div class="table-responsive">
-                <table class="table table-sm table">
-                    <thead>
-                        <tr>
-                            <th>Posição</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @{var j = 1; }
-                        @foreach (var item in ViewBag.Teams)
-                        {
-
-                            <tr>
-                                <td>@(j)</td>
-                            </tr>
-                            j++;
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="col-md-8">
-            <div class="table-responsive">
+        <div class="col-md-6">
+            <div class="">
                 <table id="teams" class="table table-sm table-hover">
                     <thead>
                         <tr>
