@@ -2,59 +2,176 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="jumbotron">
-    <h1>Bem-vindo ao PenaltyV2</h1>
-    <p class="lead">Aposta resultados de futebol com os teus amigos e destroi a alma deles enquanto comes o teu jantar grátis!</p>
-    <p><a href="~/Images/middlefinger.png" class="btn btn-primary btn-lg">Saiba mais &raquo;</a></p>
-</div>
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
 
+<img src="https://i.imgur.com/cLOAMi8.png" style="border: 1px solid black; width: 100%" alt="Pete Eckhart" />
 
-<div class="container">
-    <div class="col-md-6 col-md-offset-3">
-        <span class="glyphicon glyphicon-king"></span>
+<div class="container my-4">
+    <!--Accordion wrapper-->
+    <div class="accordion md-accordion" id="accordionEx" role="tablist" aria-multiselectable="true">
+
+        <!-- Accordion card -->
+        <div class="card">
+
+            <!-- Card header -->
+            <div class="card-header" role="tab" id="headingOne1">
+                <a data-toggle="collapse" data-parent="#accordionEx" href="#collapseOne1" aria-expanded="true"
+                   aria-controls="collapseOne1">
+                    <h5 class="mb-0">
+                        O que é? <i class="fa fa-angle-down rotate-icon"></i>
+                    </h5>
+                </a>
+            </div>
+
+            <!-- Card body -->
+            <div id="collapseOne1" class="collapse show" role="tabpanel" aria-labelledby="headingOne1"
+                 data-parent="#accordionEx">
+                <div class="card-body">
+                    O Penalty é a liga das apostas desportivas. Todas as jornadas, os apostadores submetem as suas previsões pelo site; apostas correctas dão pontos que permitem subir na tabela classificativa do Penalty. No final da época, o apostador com mais pontos recebe uma <a href="http://corredoresanonimos.pt/wp-content/uploads/2015/06/mariana1.jpg">taça</a>.
+                </div>
+            </div>
+
+        </div>
+        <!-- Accordion card -->
+        <!-- Accordion card -->
+        <div class="card">
+
+            <!-- Card header -->
+            <div class="card-header" role="tab" id="headingTwo2">
+                <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx" href="#collapseTwo2"
+                   aria-expanded="false" aria-controls="collapseTwo2">
+                    <h5 class="mb-0">
+                        Como apostar? <i class="fa fa-angle-down rotate-icon"></i>
+                    </h5>
+                </a>
+            </div>
+
+            <!-- Card body -->
+            <div id="collapseTwo2" class="collapse" role="tabpanel" aria-labelledby="headingTwo2"
+                 data-parent="#accordionEx">
+                <div class="card-body">
+                    No Penalty, existem 3 formas de se apostar:
+                    <br>
+                    <br>
+                    <h6>Apostas Manuais</h6>
+                    Aposta manualmente acedendo a <a href="https://www.penalty.duckdns.org/Home/UserBets">Apostas Manuais</a> e submete as tuas previsões para cada jogo individual.
+                    <br>
+                    <br>
+                    <h6>Apostas Automáticas</h6>
+                    Aposta automaticamente acedendo a <a href="https://www.penalty.duckdns.org/Home/SubmitAutoBets">Apostas Automáticas</a> e submete as tuas previsões para cada jogo individual.
+                    <br>
+                    <br>
+                    <h6>Apostas E-mail</h6>
+                    Aposta através de e-mail clicando na cotação desejada. Estes e-mails são enviados nos dias de jogo e podem ser configurados em <a href="https://www.penalty.duckdns.org/Identity/Account/Manage">Gestão de E-mails</a>. Neste écran podes configurar o tipo de e-mail para:
+                    <ul>
+                        <li><strong>Nenhum:</strong> nenhum tipo de notificação e-mail enviada;</li>
+                        <li><strong>Jogos do dia não apostados:</strong> recebe um e-mail com os jogos do dia para os quais ainda não submeteste nenhuma aposta;</li>
+                        <li><strong>Todos os jogos do dia:</strong> recebe um e-mail com todos os jogos do dia.</li>
+                    </ul>
+                    <br>
+                    <h5>A aposta para cada jogo individual tem como data limite <strong>o início do jogo em causa</strong>.</h5>
+                </div>
+            </div>
+
+        </div>
+        <!-- Accordion card -->
+        <!-- Accordion card -->
+        <div class="card">
+
+            <!-- Card header -->
+            <div class="card-header" role="tab" id="headingThree3">
+                <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx" href="#collapseThree3"
+                   aria-expanded="false" aria-controls="collapseThree3">
+                    <h5 class="mb-0">
+                        Pontuação <i class="fa fa-angle-down rotate-icon"></i>
+                    </h5>
+                </a>
+            </div>
+
+            <!-- Card body -->
+            <div id="collapseThree3" class="collapse" role="tabpanel" aria-labelledby="headingThree3"
+                 data-parent="#accordionEx">
+                <div class="card-body">
+                    A pontuação é baseada nas cotações pré-encontro da <a href="https://www.10bet.com/sports/football/portugal-primeira-liga">10bet</a>.
+                    Estas cotações são exibidas no ecrã de apostas. Jogos que ainda não tenham cotações válidas são mostrados como "Casa", "X" e "Fora"; a pontuação a atribuir a estas apostas será determinada quando as cotações se encontrarem disponíveis.
+                </div>
+            </div>
+
+        </div>
+        <!-- Accordion card -->
+        <!-- Accordion card -->
+        <div class="card">
+
+            <!-- Card header -->
+            <div class="card-header" role="tab" id="headingFour4">
+                <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx" href="#collapseFour4"
+                   aria-expanded="false" aria-controls="collapseFour4">
+                    <h5 class="mb-0">
+                        Multiplicadores <i class="fa fa-angle-down rotate-icon"></i>
+                    </h5>
+                </a>
+            </div>
+
+            <!-- Card body -->
+            <div id="collapseFour4" class="collapse" role="tabpanel" aria-labelledby="headingFour4"
+                 data-parent="#accordionEx">
+                <div class="card-body">
+                    De forma a permitr uma liga mais competitiva até ao último jogo, existem multiplicadores que facilitam alcançar o pódio, mesmo com um mau início de época. É possível verificar o multiplicador activo no ecrã de apostas.
+                </div>
+            </div>
+
+        </div>
+        <!-- Accordion card -->
+        <!-- Accordion card -->
+        <div class="card">
+
+            <!-- Card header -->
+            <div class="card-header" role="tab" id="headingFive5">
+                <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx" href="#collapseFive5"
+                   aria-expanded="false" aria-controls="collapseFive5">
+                    <h5 class="mb-0">
+                        Modo secreto <i class="fa fa-angle-down rotate-icon"></i>
+                    </h5>
+                </a>
+            </div>
+
+            <!-- Card body -->
+            <div id="collapseFive5" class="collapse" role="tabpanel" aria-labelledby="headingFive5"
+                 data-parent="#accordionEx">
+                <div class="card-body">
+                    De forma a permitr uma liga mais emocionante até ao fim, nas últimas jornadas não é possível aceder à tabela classificativa nem às apostas feitas por cada apostador. É possível verificar que se trata de uma jornada em modo secreto através do ícone <img src="https://www.pngkit.com/png/full/361-3614380_airport-spy-spy-icon.png" width="35" height="34" /> no ecrã de apostas.
+                </div>
+            </div>
+
+        </div>
+        <!-- Accordion card -->
+        <!-- Accordion card -->
+        <div class="card">
+
+            <!-- Card header -->
+            <div class="card-header" role="tab" id="headingSix6">
+                <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx" href="#collapseSix6"
+                   aria-expanded="false" aria-controls="collapseSix6">
+                    <h5 class="mb-0">
+                        Integridade <i class="fa fa-angle-down rotate-icon"></i>
+                    </h5>
+                </a>
+            </div>
+
+            <!-- Card body -->
+            <div id="collapseSix6" class="collapse" role="tabpanel" aria-labelledby="headingSix6"
+                 data-parent="#accordionEx">
+                <div class="card-body">
+                    Para garantir a integridade do jogo é possível extrair relatórios detalhados de todas as apostas em jogo; isto garante que nenhuma aposta foi alterada, após o jogo ter tido início. Para aceder a esses relatórios basta clicar em cima do link do jogo no ecrã de <a href="https://www.penalty.duckdns.org/Home/Summary">Resumo</a>.
+                </div>
+            </div>
+
+        </div>
+        <!-- Accordion card -->
     </div>
+    <!-- Accordion wrapper -->
 </div>
-
-<h1>O que é?</h1>
-<p>
-    Bem vindo ao Penalty, a liga das apostas desportivas. Todas as jornadas, os apostadores submetem as suas previsões pelo site; apostas correctas dão pontos que permitem subir na tabela classificativa do Penalty. No final da época, o apostador com mais pontos recebe uma <a href="http://corredoresanonimos.pt/wp-content/uploads/2015/06/mariana1.jpg">taça</a>.
-</p>
-
-<h1>Como jogar?</h1>
-<p>
-    Para jogar, basta aceder a <a href="https://www.penalty.duckdns.org/Home/UserBets">Apostas</a> e submeter as previsões. A aposta para cada jogo individual tem como data limite <strong>o início do jogo em causa</strong>.
-</p>
-
-<h2>Pontuação</h2>
-<p>
-    A pontuação é baseada nas cotações pré-encontro da <a href="https://www.10bet.com/sports/football/portugal-primeira-liga">10bet</a>.
-</p>
-
-<img class="img-fluid" src="https://i.imgur.com/rh7l3eu.png" />
-
-<p>
-    Estas cotações são exibidas no ecrã de apostas. Jogos que ainda não tenham cotações válidas são mostrados como "Casa", "X" e "Fora"; a pontuação a atribuir a estas apostas será determinada quando as cotações se encontrarem disponíveis.
-</p>
-
-<img class="img-fluid" src="https://i.imgur.com/us6buSp.png" />
-
-<h3>Multiplicadores</h3>
-<p>
-    De forma a permitr uma liga mais competitiva até ao último jogo, existem multiplicadores que facilitam alcançar o pódio, mesmo com um mau início de época. É possível verificar o multiplicador activo no ecrã de apostas.
-</p>
-
-<img class="img-fluid" src="https://i.imgur.com/us6buSp.png" />
-
-<h3>Modo secreto</h3>
-<p>
-    De forma a permitr uma liga mais emocionante até ao fim, nas últimas jornadas não é possível aceder à tabela classificativa nem às apostas feitas por cada apostador. É possível verificar que se trata de uma jornada em modo secreto através do ícone <img src="https://www.pngkit.com/png/full/361-3614380_airport-spy-spy-icon.png" width="35" height="34" /> no ecrã de apostas.
-</p>
-
-<img class="img-fluid" src="https://i.imgur.com/us6buSp.png" />
-
-<h2>Integridade</h2>
-<p>
-    Para garantir a integridade do jogo é possível extrair relatórios detalhados de todas as apostas em jogo; isto garante que nenhuma aposta foi alterada, após o jogo ter tido início. Para aceder a esses relatórios basta clicar em cima do link do jogo no ecrã de <a href="https://www.penalty.duckdns.org/Home/Summary">Resumo</a>.
-</p>
-
-<img class="img-fluid" src="https://i.imgur.com/us6buSp.png" />

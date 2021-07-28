@@ -11,6 +11,10 @@
     <FileVersion>1.0.1.9</FileVersion>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Content Remove="Views\Home\Help.cshtml" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="bootstrap" Version="4.0.0" />
