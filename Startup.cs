@@ -41,8 +41,8 @@ namespace PenaltyV2
             services.AddTransient<IEmailSender, sendMail>();
 
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseMySql(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                options.UseMySql(Database.GetConnectionString()
+                    ));
             services.AddDefaultIdentity<IdentityUser>( Configuration => {
                 Configuration.SignIn.RequireConfirmedEmail = false;
                 Configuration.Password.RequireDigit = false;
