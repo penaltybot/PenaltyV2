@@ -19,10 +19,13 @@
                     <th>Posição</th>
                     <th data-defaultsign="AZ">Equipa</th>
                     <th data-firstsort="desc">Pontos</th>
-                    <th>Jogos Feitos</th>
-                    <th>Vitórias</th>
-                    <th>Empates</th>
-                    <th>Derrotas</th>
+                    <th>Jogos</th>
+                    <th>V</th>
+                    <th>E</th>
+                    <th>D</th>
+                    <th>GM</th>
+                    <th>GS</th>
+                    <th>Forma</th>
                 </tr>
             </thead>
             foreach (var item in Model)
@@ -42,17 +45,20 @@
                         break;
                 }
 
-            <tr class="@classe">
-                <td>@i</td>
-                <td>
-                    <span class="img-fluid"><img class="thumbnail" src="@item.Team.LogoUri" style="width:20px;height:20px" /> @item.Team.Name</span>
-                </td>
-                <td>@item.Stand.Points</td>
-                <td>@item.Stand.MatchesPlayed</td>
-                <td>@item.Stand.Wins</td>
-                <td>@item.Stand.Draws</td>
-                <td>@item.Stand.Losses</td>
-            </tr>
+    <tr class="@classe">
+        <td>@i</td>
+        <td>
+            <span class="img-fluid"><img class="thumbnail" src="@item.Team.LogoUri" style="width:20px;height:20px" /> @item.Team.Name</span>
+        </td>
+        <td>@item.Stand.Points</td>
+        <td>@item.Stand.MatchesPlayed</td>
+        <td>@item.Stand.Wins</td>
+        <td>@item.Stand.Draws</td>
+        <td>@item.Stand.Losses</td>
+        <td>@item.Stand.GoalsFor</td>
+        <td>@item.Stand.GoalsAgainst</td>
+        <td>@item.Stand.Form</td>
+    </tr>
         }
         }
 </ table >

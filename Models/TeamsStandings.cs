@@ -8,7 +8,7 @@ namespace PenaltyV2.Models
     public class TeamsStandings
     {
         public int Id { get; set; }
-        public Nullable<int> Rank { get; set; }
+        public Nullable<int> Position { get; set; }
         public Nullable<int> Points { get; set; }
         public string Form { get; set; }
         public Nullable<int> MatchesPlayed { get; set; }

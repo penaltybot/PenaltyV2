@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace PenaltyV2.Data
 {
+    
     public class EmailBet
     {
         public string Username { get; set; }
@@ -27,10 +28,9 @@ namespace PenaltyV2.Data
 
     public class Database
     {
+        public static string league_id = GetGlobalConstant("LEAGUE_ID");
         public static List<Userscores> GetUserscores(ApplicationDbContext dbContext, string league)
         {
-            //TODO: Tenho de ir buscar o competition year
-            string league_id = GetGlobalConstant("LEAGUE_ID");
             string acumulative_matchday = GetGlobalConstant("SECRET_MODE_START");
             List<Userscores> qry = new List<Userscores>();
             //Warning: Cuidado com o contains, se houver 2 ligas chamadas FCT e FCT2 por exemplo, quem tiver na FCT vai poder ver FCT2
@@ -131,13 +131,11 @@ namespace PenaltyV2.Data
             MySqlConnection connection = new MySqlConnection(GetConnectionString());
             connection.Open();
 
-            string leagueId = GetGlobalConstant("LEAGUE_ID");
-
             MySqlCommand getAvailableFixturesForAutoBetsCommand = new MySqlCommand("GetAvailableFixturesForAutoBets", connection)
             {
                 CommandType = CommandType.StoredProcedure
             };
-            getAvailableFixturesForAutoBetsCommand.Parameters.Add(new MySqlParameter("LeagueID", leagueId));
+            getAvailableFixturesForAutoBetsCommand.Parameters.Add(new MySqlParameter("LeagueID", league_id));
 
             MySqlDataReader getAvailableFixturesForAutoBetsReader = getAvailableFixturesForAutoBetsCommand.ExecuteReader();
 
@@ -194,13 +192,11 @@ namespace PenaltyV2.Data
             MySqlConnection connection = new MySqlConnection(GetConnectionString());
             connection.Open();
 
-            string leagueId = GetGlobalConstant("LEAGUE_ID");
-
             MySqlCommand getSeasonTeamsCommand = new MySqlCommand("GetSeasonTeams", connection)
             {
                 CommandType = CommandType.StoredProcedure
             };
-            getSeasonTeamsCommand.Parameters.Add(new MySqlParameter("LeagueID", leagueId));
+            getSeasonTeamsCommand.Parameters.Add(new MySqlParameter("LeagueID", league_id));
 
             MySqlDataReader getSeasonTeamsReader = getSeasonTeamsCommand.ExecuteReader();
             List<Teams> teams = new List<Teams>();
@@ -226,6 +222,7 @@ namespace PenaltyV2.Data
             List<Matches> qry = new List<Matches>();
 
             qry = (from m in dbContext.Matches
+                   where m.LeagueID == Convert.ToInt32(league_id)
                    orderby m.UtcDate
                    select new Matches
                    {
@@ -239,6 +236,7 @@ namespace PenaltyV2.Data
                        Idawayteam = m.Idawayteam,
                        Idhometeam = m.Idhometeam,
                        UtcDate = m.UtcDate,
+                       IdmatchAPI = m.IdmatchAPI
                    }).ToList();
 
             return qry;
@@ -249,7 +247,7 @@ namespace PenaltyV2.Data
             List<TStands> qry = new List<TStands>();
 
             qry = (from ts in dbContext.TeamsStandings
-                   orderby ts.Rank
+                   orderby ts.Position
                    join t in dbContext.Teams
                    on ts.TeamID equals t.TeamId
                    select new TStands
@@ -264,7 +262,7 @@ namespace PenaltyV2.Data
                        Stand = new TeamsStandings
                        {
                            Id = ts.Id,
-                           Rank = ts.Rank,
+                           Position = ts.Position,
                            Points = ts.Points,
                            TeamID = ts.TeamID,
                            MatchesPlayed = ts.MatchesPlayed,
@@ -281,9 +279,11 @@ namespace PenaltyV2.Data
 
         public static int GetCurrentMatchDay(ApplicationDbContext dbContext)
         {
+            
             List<Matches> qry = new List<Matches>();
             qry = (from m in dbContext.Matches
                    where m.UtcDate > DateTime.Today
+                   && m.LeagueID == Convert.ToInt32(league_id)
                    orderby m.UtcDate
                    select new Matches
                    {
@@ -302,7 +302,8 @@ namespace PenaltyV2.Data
         public static int GetLastMatchDay(ApplicationDbContext dbContext)
         {
             List<Matches> qry = new List<Matches>();
-            qry = (from m in dbContext.Matches 
+            qry = (from m in dbContext.Matches
+                   where m.LeagueID == Convert.ToInt32(league_id)
                    orderby m.Matchday descending
                    select new Matches
                    {
@@ -321,6 +322,7 @@ namespace PenaltyV2.Data
             qry = (from m2 in
                        (from m in dbContext.Matches
                         where m.Matchday == matchday
+                        && m.LeagueID == Convert.ToInt32(league_id)
                         select m)
                    join b2 in
                        (from b in dbContext.Bets
@@ -534,6 +536,7 @@ namespace PenaltyV2.Data
 
             qry = (from m in dbContext.Matches
                    where m.Matchday == matchday
+                   && m.LeagueID == Convert.ToInt32(league_id)
                    orderby m.UtcDate
                    select new ScoresUserBets
                    {
@@ -617,6 +620,14 @@ namespace PenaltyV2.Data
 
             return connectionString;
         }
+
+        public static string InverteString(string s)
+        {
+            char[] arr = s.ToCharArray();
+            Array.Reverse(arr);
+            return new string(arr);
+        }
+
         //INACABADO
         public static int GetCurrentMatchYear(ApplicationDbContext dbContext)
         {
