@@ -598,7 +598,7 @@ namespace PenaltyV2.Data
                        Name = u.Name,
                        Username = u.Username,
                        Favoriteteam = u.Favoriteteam,
-                       Notifications = u.Notifications,
+                       EmailNotifications = u.EmailNotifications,
                        Leagues = u.Leagues,
                        UserImg = u.UserImg
                    }).FirstOrDefault();
