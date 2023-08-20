@@ -220,7 +220,6 @@ namespace PenaltyV2.Data
         public static List<Matches> GetMatches(ApplicationDbContext dbContext)
         {
             List<Matches> qry = new List<Matches>();
-
             qry = (from m in dbContext.Matches
                    where m.LeagueID == Convert.ToInt32(league_id)
                    orderby m.UtcDate
@@ -238,6 +237,14 @@ namespace PenaltyV2.Data
                        UtcDate = m.UtcDate,
                        IdmatchAPI = m.IdmatchAPI
                    }).ToList();
+
+            List<Teams> seasonTeams = GetSeasonTeams();
+
+            foreach (var item in qry)
+            {
+                item.LogoUriAway = seasonTeams.Find(t => t.TeamId == item.Idawayteam.ToString()).LogoUri;
+                item.LogoUriHome = seasonTeams.Find(t => t.TeamId == item.Idhometeam.ToString()).LogoUri;
+            }
 
             return qry;
         }

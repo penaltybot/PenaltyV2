@@ -16,6 +16,8 @@ namespace PenaltyV2.Models
         public Nullable<int> Awayteamgoals { get; set; }
         public Nullable<int> Idawayteam { get; set; }
         public Nullable<int> Idhometeam { get; set; }
+        public string LogoUriAway { get; set; }
+        public string LogoUriHome { get; set; }
         public string Status { get; set; }
         public string Competitionyear { get; set; }
         public Nullable<System.DateTime> UtcDate { get; set; }

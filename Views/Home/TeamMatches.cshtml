@@ -65,7 +65,7 @@ else
                     <tr>
                         <th scope="row"><a href="Audit?IdmatchAPI=@item.IdmatchAPI">@(i + 1)</a></th>
                         <td></td>
-                        <td><img width="30" height="30" src="~/Images/@urlimagehome" /> @item.Hometeam</td>
+                        <td><img width="30" height="30" src="@item.LogoUriHome" /> @item.Hometeam</td>
                         <td></td>
                         <td valign="middle" width="20" height="20">
                             @if (item.Hometeamgoals != null)
@@ -89,7 +89,7 @@ else
                             }
                         </td>
                         <td></td>
-                        <td><img width="30" height="30" src="~/Images/@urlimageaway" /> @item.Awayteam</td>
+                        <td><img width="30" height="30" src="@item.LogoUriAway" /> @item.Awayteam</td>
                         <td>@(((DateTime)item.UtcDate).ToString("g"))</td>
                     </tr>
                     i++;

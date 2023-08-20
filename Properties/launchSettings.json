@@ -20,7 +20,7 @@
         "DB_USER": "root",
         "LANG": "pt_PT.UTF-8",
         "DB_DATABASE": "PenaltyV2",
-        "DB_URL": "penalty.duckdns.org",
+        "DB_URL": "penalty.bet",
         "DB_PORT": "3308",
         "DB_PASSWORD": "123pardal123",
         "LC_ALL": "pt_PT.UTF-8",
