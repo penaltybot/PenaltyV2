@@ -171,7 +171,8 @@ namespace PenaltyV2.Controllers
 
             List<Userscores> userscores = Database.GetUserscores(_dbContext, league);
             ViewBag.LigaSelecionada = league;
-            ViewBag.JornadaSecreta = Convert.ToInt32(Database.GetGlobalConstant("SECRET_MODE_START")); 
+            ViewBag.JornadaSecreta = Convert.ToInt32(Database.GetGlobalConstant("SECRET_MODE_START"));
+            ViewBag.VolumeApostas = Convert.ToDecimal(Database.GetGlobalConstant("SEASON_BETTING_VOLUME"), System.Globalization.CultureInfo.InvariantCulture);
             return View(userscores);
         }
 

@@ -26,6 +26,7 @@
                     <th data-defaultsign="AZ">Equipa</th>
                     <th data-firstsort="desc">Pontos</th>
                     <th>Apostas Certas</th>
+                    <th>Saldo Final</th>
                 </tr>
             </thead>
             foreach (var item in Model)
@@ -48,6 +49,18 @@
                     <td>@item.Favoriteteam</td>
                     <td>@item.Score</td>
                     <td>@item.Perfects</td>
+                    @if ((item.Score - ViewBag.VolumeApostas) > 0.0m)
+                    {
+                     <td style="color: green; border-style: solid">
+                         @(item.Score-ViewBag.VolumeApostas)€
+                     </td>
+                    }
+                    else
+                    {
+                     <td style="color: red; border-style: solid">
+                         @(item.Score-ViewBag.VolumeApostas)€
+                     </td>
+                    }
                 </tr>
             }
         }

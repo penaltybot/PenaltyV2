@@ -33,6 +33,8 @@ namespace PenaltyV2.Models
         public int? Perfect { get; set; }
         public string BetResult1 { get; set; }
         public decimal? Multiplier { get; set; }
+        public string LogoUriAway { get; set; }
+        public string LogoUriHome { get; set; }
 
     }
 }

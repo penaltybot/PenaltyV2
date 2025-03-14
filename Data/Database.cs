@@ -366,6 +366,13 @@ namespace PenaltyV2.Data
 
                    }).OrderBy(m2 => m2.UtcDate).ToList();
 
+            List<Teams> seasonTeams = GetSeasonTeams();
+
+            foreach (var item in qry)
+            {
+                item.LogoUriAway = seasonTeams.Find(t => t.TeamId == item.Idawayteam.ToString()).LogoUri;
+                item.LogoUriHome = seasonTeams.Find(t => t.TeamId == item.Idhometeam.ToString()).LogoUri;
+            }
 
             return qry;
         }

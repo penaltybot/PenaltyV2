@@ -90,7 +90,7 @@ else
                         <tr>
                             <th scope="row">@(jogo + 1)</th>
                             <td></td>
-                            <td><img width="30" height="30" src="~/Images/@urlimagehome" /> @item.Hometeam</td>
+                            <td><img width="30" height="30" src="@item.LogoUriHome" /> @item.Hometeam</td>
                             <td></td>
                             <td>
                                 <div class="toggle-radio">
@@ -193,7 +193,7 @@ else
                                 </div>
                             </td>
                             <td></td>
-                            <td><img width="30" height="30" src="~/Images/@urlimageaway" /> @item.Awayteam</td>
+                            <td><img width="30" height="30" src="@item.LogoUriAway" /> @item.Awayteam</td>
                             <td></td>
                             <td>@item.UtcDate.ToString("g")</td>
                             <td>
